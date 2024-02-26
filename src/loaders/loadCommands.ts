@@ -10,15 +10,12 @@ import path from "path";
  * ////TODO : add description
  */
 export default async (bot:ClientWithCommands):Promise<number|string> => {
-    
-    // TODO : test the load command error message by putting a blank js files inside of src/commands dir
 
-    //! DEBUG
-    let err:string = ""
+    let err:string = "";
 
-    let Way = path.dirname(path.dirname(__filename))
+    let Way:string = path.dirname(path.dirname(__filename));
 
-    console.log(Way)
+    print(Way, LogLevel.Debug);
 
     fs.readdirSync(`${Way}/commands`).filter(f => f.endsWith(".js")).forEach(async file => {
 
@@ -33,9 +30,6 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
         print(`commandload : ${file} loaded.`, LogLevel.Log);
     });
 
-    if (err !== "") {
-        return err;
-    } else {
-        return 1;
-    }
+    if (err === "") { return 1; }
+    return err;
 }
