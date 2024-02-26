@@ -6,6 +6,8 @@ import loadDatabase from './loaders/loadDatabase';
 import loadEvents from './loaders/loadEvents';
 import loadSlashInteractions from './loaders/loadSlashInteractions';
 import ClientWithCommands from './utils/clientWithCommands';
+import print from './utils/consoleHandler';
+import { LogLevel } from './utils/consoleHandler';
 
 /**
  * Tries to connect the bot Client to Discord servers
@@ -45,37 +47,37 @@ async function main():Promise<void> {
         intents: [3276799]
     }) as ClientWithCommands;
 
-    console.log("starting bot");
+    print("starting bot...", LogLevel.Log);
 
     await tryFunction(bot, login);
 
-    console.log("bot logged in");
+    print("bot logged in.", LogLevel.Info);
 
-    console.log("connecting to database");
+    print("connecting to database...", LogLevel.Log);
 
     await tryFunction(bot, loadDatabase);
 
-    console.log("connected to database");
+    print("bot connected to database.", LogLevel.Info);
 
-    console.log("loading events");
+    print("loading events...", LogLevel.Log);
 
     await tryFunction(bot, loadEvents);
 
-    console.log("events loaded");
+    print("events loaded.", LogLevel.Info);
 
     bot.commands = new Discord.Collection()
 
-    console.log("loading commands");
+    print("loading commands...", LogLevel.Log);
 
     await tryFunction(bot, loadCommands);
 
-    console.log("commands loaded");
+    print("commands loaded.", LogLevel.Info);
 
-    console.log("loading slash intercations");
+    print("loading slash intercations...", LogLevel.Log);
 
     await tryFunction(bot, loadSlashInteractions);
 
-    console.log("slash interactions loaded");
+    print("slash interactions loaded.", LogLevel.Info);
 }
 
 main();
