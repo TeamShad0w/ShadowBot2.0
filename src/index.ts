@@ -47,19 +47,19 @@ async function main():Promise<void> {
 
     console.log("starting bot");
 
-    tryFunction(bot, login);
+    await tryFunction(bot, login);
 
     console.log("bot logged in");
 
     console.log("connecting to database");
 
-    tryFunction(bot, loadDatabase);
+    await tryFunction(bot, loadDatabase);
 
     console.log("connected to database");
 
     console.log("loading events");
 
-    tryFunction(bot, loadEvents);
+    await tryFunction(bot, loadEvents);
 
     console.log("events loaded");
 
@@ -67,13 +67,13 @@ async function main():Promise<void> {
 
     console.log("loading commands");
 
-    tryFunction(bot, loadCommands);
+    await tryFunction(bot, loadCommands);
 
     console.log("commands loaded");
 
     console.log("loading slash intercations");
 
-    tryFunction(bot, loadSlashInteractions);
+    await tryFunction(bot, loadSlashInteractions);
 
     console.log("slash interactions loaded");
 }
