@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import fs from "fs";
 import ClientWithCommands from '../utils/clientWithCommands';
+import Command from 'src/utils/command';
 
 
 /**
@@ -14,7 +15,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
 
     fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {
 
-        let command = require(`./commands/${file}`);
+        let command:Command = require(`./commands/${file}`);
 
         if(!command.name || typeof command.name !== "string") {
             err = `Incorect name for command ${file.slice(0, file.length -3)}.`;

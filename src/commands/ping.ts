@@ -1,5 +1,6 @@
 import Discord, { messageLink } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
+import Command from '../utils/command';
 
 
 //! This command is as it should be, do not modify it, modify external functinos if needed.
@@ -7,7 +8,7 @@ import ClientWithCommands from '../utils/clientWithCommands';
 export default {
     name : "ping",
     description : "replies with pong",
-    permission : null, 
+    permission : null,
     dm : true,
 
     async run(bot:ClientWithCommands, msg:Discord.Message, interaction:Discord.Interaction): Promise<void> {
