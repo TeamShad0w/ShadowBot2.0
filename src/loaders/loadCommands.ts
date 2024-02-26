@@ -8,7 +8,8 @@ import ClientWithCommands from '../utils/clientWithCommands';
  */
 export default async (bot:ClientWithCommands):Promise<number|string> => {
     
-    // TODO : finish loadCommands (see https://github.com/C0dex73/ShadowBot/blob/main/loader/loadCommands.js)
+    // TODO : test the load command error message by putting a blanck js files inside of src/commands dir
+
     let err = undefined
 
     fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {
