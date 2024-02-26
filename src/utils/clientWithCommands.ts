@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
-import Command from 'src/utils/command';
+import ICommand from 'src/utils/command';
 
 export default interface ClientWithCommands extends Discord.Client {
-    commands: Discord.Collection<string, Command>;
+    commands: Discord.Collection<string, ICommand>;
 }

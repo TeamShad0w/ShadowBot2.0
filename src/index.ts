@@ -23,12 +23,12 @@ async function login(bot:ClientWithCommands):Promise<number|string> {
 }
 
 //TODO : jsDoc
-interface tryFunctionCallbackType {
+interface ITryFunctionCallback {
   (bot:ClientWithCommands) : Promise<number|string>;
 }
 
 //TODO : jsDoc
-async function tryFunction(bot:ClientWithCommands, callback:tryFunctionCallbackType):Promise<void> {
+async function tryFunction(bot:ClientWithCommands, callback:ITryFunctionCallback):Promise<void> {
     let tryF:number|string = await callback(bot);
     if( tryF !== 1){
         throw new Error(tryF.toString());
