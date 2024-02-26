@@ -4,7 +4,8 @@
   "description": "The upgraded version of the ShadowBot",
   "main": "dist/index.js",
   "scripts": {
-    "test": "node test/test.js",
+    "testJs" : "node test/test.js",
+    "testTs" : "ts-node test/test.js",
     "build" : "tsc -p .",
     "tsStart" : "ts-node src/index.ts",
     "jsStart" : "node dist/index.js"
