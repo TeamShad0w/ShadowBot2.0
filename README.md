@@ -92,13 +92,13 @@ If you have any feedback, please open an issue or contact us on discord : shaden
 - [@CODEX](https://www.github.com/C0dex73)
 - [@Shaden](https://www.github.com/Shaden919)
 
-26/02/2024 (for u this is 02/26/2024) : We are two highschool student, we can say that one has grown with code and the other has just discover this world 2 years ago
-(i let u find who is who), we live in france and here it is the presentation for each of us (so just two presentation) :
+26/02/2024 (for you this is 02/26/2024) : We are two highschool student, we can say that one had grown with code and the other had just discover this world 2 years ago
+(i let you find who is who), we live in france and here it is the presentation for each of us (so just two presentation) :
 
   CODEX: 
 
 
-  Shaden : hi, my NickName is Shaden and u d'ont want to know whats his story, i'm french and here it is my hobbys :
+  Shaden : hi, my NickName is Shaden and you d'ont want to know whats his story, i'm french and here it is my hobbys :
 
     | Rank |     Hobbys    |
     |-----:|---------------|
