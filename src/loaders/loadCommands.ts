@@ -9,7 +9,7 @@ import ICommand from 'src/utils/command';
  */
 export default async (bot:ClientWithCommands):Promise<number|string> => {
     
-    // TODO : test the load command error message by putting a blanck js files inside of src/commands dir
+    // TODO : test the load command error message by putting a blank js files inside of src/commands dir
 
     let err:string = ""
 
