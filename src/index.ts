@@ -3,7 +3,7 @@ import internal from 'stream';
 import Config from './config.json';
 
 const bot = new Discord.Client({
-    intents: [] //TODO : get intent
+    intents: [3276799]
 });
 
 async function login():Promise<number|string> {

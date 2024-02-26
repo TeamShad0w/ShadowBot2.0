@@ -4,7 +4,7 @@ const tslib_1 = require("tslib");
 const discord_js_1 = tslib_1.__importDefault(require("discord.js"));
 const config_json_1 = tslib_1.__importDefault(require("./config.json"));
 const bot = new discord_js_1.default.Client({
-    intents: []
+    intents: [3276799]
 });
 async function login() {
     try {
