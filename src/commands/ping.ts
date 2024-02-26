@@ -1,7 +1,5 @@
 import Discord, { messageLink } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
-import Command from '../utils/command';
-
 
 //! This command is as it should be, do not modify it, modify external functinos if needed.
 
