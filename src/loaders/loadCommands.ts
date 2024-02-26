@@ -1,4 +1,5 @@
 import Discord from 'discord.js';
+import fs from 'fs';
 import ClientWithCommands from '../utils/clientWithCommands';
 
 //TODO : jsDoc
