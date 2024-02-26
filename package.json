@@ -1,6 +1,6 @@
 {
   "name": "shadowbot2.0",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "The upgraded version of the ShadowBot",
   "main": "dist/index.js",
   "scripts": {
