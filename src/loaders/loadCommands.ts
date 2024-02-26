@@ -4,7 +4,7 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import ICommand from 'src/utils/command';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
-
+import path from "path";
 
 /**
  * ////TODO : add description
@@ -16,9 +16,13 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
     //! DEBUG
     let err:string = ""
 
-    fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {
+    let Way = path.dirname(path.dirname(__filename))
 
-        let command:ICommand = require(`./commands/${file}`);
+    console.log(Way)
+
+    fs.readdirSync(`${Way}/commands`).filter(f => f.endsWith(".js")).forEach(async file => {
+
+        let command:ICommand = require(`${Way}/commands/${file}`);
 
         if(!command.name || typeof command.name !== "string") {
             err = `Incorect name for command ${file.slice(0, file.length -3)}.`;
