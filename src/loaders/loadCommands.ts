@@ -1,10 +1,10 @@
 import Discord from 'discord.js';
-<<<<<<< HEAD
+
 import fs from "fs";
 
-=======
+
 import ClientWithCommands from '../utils/clientWithCommands';
->>>>>>> 9dcc45c90560b6e8c3a398d7778a8b99151801d3
+
 
 //TODO : jsDoc
 export default async (bot:ClientWithCommands):Promise<number|string> => {
