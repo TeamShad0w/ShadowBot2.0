@@ -79,7 +79,7 @@ Start the server
 
 ## Feedback
 
-If you have any feedback, please reach out to us at fake@fake.com
+If you have any feedback, please open an issue or contact us on discord : shaden2919 or 001001001_6581
 
 
 ## Who are we ?
