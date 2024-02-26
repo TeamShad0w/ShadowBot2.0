@@ -4,6 +4,8 @@ import ClientWithCommands from '../utils/clientWithCommands';
 //TODO : jsDoc
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
     
+    //TODO : finish SlashInteraction
+
     if(bot.user === null) { return "Error while loading SlashCommands : bot.user is null"; }
 
     let commands:Array<Discord.SlashCommandBuilder> = [];
