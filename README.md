@@ -2,6 +2,11 @@
 
 The upgraded version of the ShadowBot
 
+just to be clear, this is a french bot and if we speak in english that because u know just one language. 
+So, here is the little brother of ShadowBot, born alone in the dark place of a little french server that u will never know...(his name is Shadow, don't u dare ask why).
+but, by seing his big bro, abandonned, weak and mocked, he swear "I WILL BE THE KING OF THE DISCORC BOT !"(i hope u get it) and start his hard way,but with rage, to be 
+harder, better, faster, stronger.
+
 <!-- TODO : maybe write a short story about shadow bot 1.0 and his brother ? -->
 ## License
 
@@ -89,5 +94,23 @@ If you have any feedback, please open an issue or contact us on discord : shaden
 
 - [@CODEX](https://www.github.com/C0dex73)
 - [@Shaden](https://www.github.com/Shaden919)
+
+26/02/2024 (for u this is 02/26/2024) : We are two highschool student, we can say that one has grown with code and the other has just discover this world 2 years ago
+(i let u find who is who), we live in france and here it is the presentation for each of us (so just two presentation) :
+
+  CODEX: 
+
+
+  Shaden : hi, my NickName is Shaden and u d'ont want to know whats his story, i'm french and here it is my hobbys :
+  
+    | Rank |     Hobbys    |
+    |-----:|---------------|
+    |     1|   reading     |
+    |     3|   video-game  |
+    |     3|    Coding     |
+    |     4|    Eating     |
+    |     3|    Sleeping   |
+
+
 
 <!-- TODO : add description -->
