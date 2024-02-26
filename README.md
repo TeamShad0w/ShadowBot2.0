@@ -36,6 +36,9 @@ install dependencies
   yarn install
 ```
 
+rename src/default_config.json to src/config.json
+replace values inside the config.json file with yours (token, database url / API key, etc...).
+
 use build to build the src folder into the dist one
 ```bash
   yarn build
