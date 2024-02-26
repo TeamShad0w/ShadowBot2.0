@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "testJs" : "node test/test.js",
-    "testTs" : "ts-node test/test.js",
+    "testTs" : "ts-node test/test.ts",
     "build" : "tsc -p .",
     "tsStart" : "ts-node src/index.ts",
     "jsStart" : "node dist/index.js"
