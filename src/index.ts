@@ -62,8 +62,6 @@ async function main():Promise<void> {
 
     console.log("events loaded");
 
-// TODO : fix this error
-
     bot.commands = new Discord.Collection()
 
     console.log("loading commands");
