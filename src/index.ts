@@ -80,5 +80,3 @@ async function main():Promise<void> {
 }
 
 main();
-
-//TODO: create a console handler :  print(msg:string, loglevel) -->  in console : [DD/MM/YYYY at HH:MM:SS] msg
