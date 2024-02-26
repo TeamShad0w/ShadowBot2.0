@@ -77,6 +77,8 @@ async function main():Promise<void> {
 
     await tryFunction(bot, loadSlashInteractions);
 
+    // TODO : slash interactions don't work, maybe try calling it on ready after having created loadEvents.ts and events/ready (see https://github.com/C0dex73/ShadowBot/)
+
     print("slash interactions loaded.", LogLevel.Info);
 }
 
