@@ -6,21 +6,13 @@ import loadCommands from './loaders/loadCommands';
 import loadDatabase from './loaders/loadDatabase';
 import loadEvents from './loaders/loadEvents';
 import loadSlashInteractions from './loaders/loadSlashInteractions';
-
-
-
-/**
- * The bot Client
- */
-const bot = new Discord.Client({
-    intents: [3276799]
-});
+import ClientWithCommands from './utils/clientWithCommands';
 
 /**
  * Tries to connect the bot Client to Discord servers
  * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
  */
-async function login():Promise<number|string> {
+async function login(bot:ClientWithCommands):Promise<number|string> {
     try {
         await bot.login(Config.token);
     }catch(err:unknown) {
@@ -31,11 +23,11 @@ async function login():Promise<number|string> {
 
 //TODO : jsDoc
 interface tryFunctionCallbackType {
-    (bot:Discord.Client) : Promise<number|string>;
+    (bot:ClientWithCommands) : Promise<number|string>;
 }
 
 //TODO : jsDoc
-async function tryFunction(bot:Discord.Client, callback:tryFunctionCallbackType):Promise<void> {
+async function tryFunction(bot:ClientWithCommands, callback:tryFunctionCallbackType):Promise<void> {
     let tryF:number|string = await callback(bot);
     if( tryF !== 1){
         throw new Error(tryF.toString());
@@ -44,6 +36,14 @@ async function tryFunction(bot:Discord.Client, callback:tryFunctionCallbackType)
 
 //TODO : jsDoc
 async function main():Promise<void> {
+
+    /**
+     * The bot Client
+     */
+    const bot = new Discord.Client({
+        intents: [3276799]
+    }) as ClientWithCommands;
+
     console.log("starting bot");
 
     tryFunction(bot, login);
