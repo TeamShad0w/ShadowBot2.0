@@ -12,7 +12,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
 
     let err:string = ""
 
-    fs.readdirSync("./commands").filter(f => f.endsWith(".js")).every(async file => {
+    fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {
 
         let command = require(`./commands/${file}`);
 
@@ -23,7 +23,6 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
 
         bot.commands.set(command.name, command);
         console.log(`COMMANDLOAD : ${file} loaded.`);
-        return true;
     });
 
     if (err !== "") {
