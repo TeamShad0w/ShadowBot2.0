@@ -10,24 +10,25 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
     
     // TODO : test the load command error message by putting a blanck js files inside of src/commands dir
 
-    let err = undefined
+    let err:string = ""
 
-    fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {
+    fs.readdirSync("./commands").filter(f => f.endsWith(".js")).every(async file => {
 
         let command = require(`./commands/${file}`);
 
         if(!command.name || typeof command.name !== "string") {
-            err = (`Incorect name for command ${file.slice(0, file.length -3)}.`)
+            err = `Incorect name for command ${file.slice(0, file.length -3)}.`;
             return false;
-        } else {
-            bot.commands.set(command.name, command)
-            console.log(`COMMANDLOAD : ${file} loaded.`)
-        }       
-    })  
-    if (err) {
-        return err
+        }
+
+        bot.commands.set(command.name, command);
+        console.log(`COMMANDLOAD : ${file} loaded.`);
+        return true;
+    });
+
+    if (err !== "") {
+        return err;
     } else {
-        return 1
+        return 1;
     }
-     ;
 }
