@@ -6,10 +6,12 @@ import fs from "fs";
 import ClientWithCommands from '../utils/clientWithCommands';
 
 
-//TODO : jsDoc
+/**
+ * ////TODO : add description
+ */
 export default async (bot:ClientWithCommands):Promise<number|string> => {
     
-    // TODO : loadCommands (see https://github.com/C0dex73/ShadowBot/blob/main/loader/loadCommands.js)
+    // TODO : finish loadCommands (see https://github.com/C0dex73/ShadowBot/blob/main/loader/loadCommands.js)
     let err = undefined
 
     fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {

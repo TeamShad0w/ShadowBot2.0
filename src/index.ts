@@ -10,6 +10,8 @@ import ClientWithCommands from './utils/clientWithCommands';
 
 /**
  * Tries to connect the bot Client to Discord servers
+ * @param {ClientWithCommands} the client used by the bot
+ * 
  * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
  */
 async function login(bot:ClientWithCommands):Promise<number|string> {
