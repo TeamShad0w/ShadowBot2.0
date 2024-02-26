@@ -19,7 +19,7 @@ You can download the source code or clone this repository with `git clone https:
 
 Use yarn to build the ts scripts into js ones.
 
-###Setup and use Yarn
+### Setup and use Yarn
 
 ```bash
   npm i -g yarn
