@@ -2,7 +2,7 @@
 
 The upgraded version of the ShadowBot
 
-<!-- maybe write a short story about shadow bot 1.0 and his brother ? -->
+<!-- TODO : maybe write a short story about shadow bot 1.0 and his brother ? -->
 ## License
 
 [CC-BY-NC-SA-4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -87,4 +87,4 @@ If you have any feedback, please open an issue or contact us on discord : shaden
 - [@CODEX](https://www.github.com/C0dex73)
 - [@Shaden](https://www.github.com/Shaden919)
 
-<!-- add description -->
+<!-- TODO : add description -->
