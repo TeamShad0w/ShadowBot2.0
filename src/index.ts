@@ -75,8 +75,6 @@ async function main():Promise<void> {
     tryFunction(bot, loadSlashInteractions);
 
     console.log("slash interactions loaded");
-
-    
 }
 
 main();
