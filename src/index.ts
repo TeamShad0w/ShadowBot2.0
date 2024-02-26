@@ -7,6 +7,8 @@ import loadDatabase from './loaders/loadDatabase';
 import loadEvents from './loaders/loadEvents';
 import loadSlashInteractions from './loaders/loadSlashInteractions';
 
+
+
 /**
  * The bot Client
  */
@@ -59,6 +61,10 @@ async function main():Promise<void> {
     tryFunction(bot, loadEvents);
 
     console.log("events loaded");
+
+// TODO : fix this error
+
+    bot.commands = new Discord.Collection()
 
     console.log("loading commands");
 
