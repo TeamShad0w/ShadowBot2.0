@@ -1,5 +1,7 @@
 import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
+import print from '../utils/consoleHandler';
+import { LogLevel } from '../utils/consoleHandler';
 
 //TODO : jsDoc
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
@@ -19,7 +21,7 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
 
         commands.push(slashCommand);
 
-        console.log("Command : " + command.name + " is loaded");
+        print("Slash interaction : " + command.name + " is loaded.", LogLevel.Log);
     })
 
     const rest = new Discord.REST({version: '10'}).setToken(bot.token == null ? "" : bot.token);

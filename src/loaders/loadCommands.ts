@@ -2,6 +2,8 @@ import Discord from 'discord.js';
 import fs from "fs";
 import ClientWithCommands from '../utils/clientWithCommands';
 import ICommand from 'src/utils/command';
+import print from '../utils/consoleHandler';
+import { LogLevel } from '../utils/consoleHandler';
 
 
 /**
@@ -11,6 +13,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
     
     // TODO : test the load command error message by putting a blanck js files inside of src/commands dir
 
+    //! DEBUG
     let err:string = ""
 
     fs.readdirSync("./commands").filter(f => f.endsWith(".js")).forEach(async file => {
@@ -23,7 +26,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
         }
 
         bot.commands.set(command.name, command);
-        console.log(`COMMANDLOAD : ${file} loaded.`);
+        print(`commandload : ${file} loaded.`, LogLevel.Log);
     });
 
     if (err !== "") {
