@@ -1,6 +1,5 @@
 //imports
 import Discord from 'discord.js';
-import internal from 'stream';
 import Config from './config.json';
 import loadCommands from './loaders/loadCommands';
 import loadDatabase from './loaders/loadDatabase';
@@ -25,7 +24,7 @@ async function login(bot:ClientWithCommands):Promise<number|string> {
 
 //TODO : jsDoc
 interface tryFunctionCallbackType {
-    (bot:ClientWithCommands) : Promise<number|string>;
+  (bot:ClientWithCommands) : Promise<number|string>;
 }
 
 //TODO : jsDoc
