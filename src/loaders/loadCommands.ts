@@ -17,12 +17,12 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
 
     print(Way, LogLevel.Debug);
 
-    fs.readdirSync(`${Way}/commands`).filter(f => f.endsWith(".js")).forEach(async file => {
+    fs.readdirSync(`${Way}/commands`).filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async file => {
 
         let command:ICommand = require(`${Way}/commands/${file}`);
 
         if(!command.name || typeof command.name !== "string") {
-            err = `Incorect name for command ${file.slice(0, -3)}.`;
+            err += `Incorect name for command ${file.slice(0, -3)}.\r\n`;
             return false;
         }
 
