@@ -5,7 +5,7 @@ import ClientWithCommands from 'src/utils/clientWithCommands';
 import { ITryFunctionCallback, tryFunction } from '../utils/tryFunction';
 import Discord from 'discord.js';
 
-module.exports = {
+export default {
     listener : async (bot:ClientWithCommands) : Promise<void> =>  {
         print("ready");
         if (bot.user === null) { return; }

@@ -23,7 +23,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
 
     fs.readdirSync(`${Way}/commands`).filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async file => {
 
-        let command:ICommand = require(`${Way}/commands/${file}`);
+        let command:ICommand = require(`${Way}/commands/${file}`).default;
 
         if(!command.name || typeof command.name !== "string") {
             err += `Incorect name for command ${file.slice(0, -3)}.\r\n`;
