@@ -3,8 +3,15 @@ TODO : create config.json architecture
 
 TODO : setup louis's environnement
 
-TODO : create npm package
+TODO : create npm package for 0.0.2
 
 TODO : ask CODEX's brother for pp of the bot
 
 TODO : remove all unused imports
+
+TODO : create help command
+
+TODO : create autorole command (yes we'll do it with reaction too but when we will have nice architecture of json shaden)
+
+TODO : handle multiple guilds
+
