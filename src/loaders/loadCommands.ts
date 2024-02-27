@@ -22,7 +22,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
         let command:ICommand = require(`${Way}/commands/${file}`);
 
         if(!command.name || typeof command.name !== "string") {
-            err = `Incorect name for command ${file.slice(0, file.length -3)}.`;
+            err = `Incorect name for command ${file.slice(0, -3)}.`;
             return false;
         }
 
