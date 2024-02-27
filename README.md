@@ -3,7 +3,6 @@
 The upgraded version of the ShadowBot
 
  just to be clear, this is a French bot and if we speak in English, that's because you know just one language. So, here is the little brother of ShadowBot, born alone in the dark place of a little French server that you will never know... (his name is Shadow, don't you dare ask why). But, by seeing his big bro, abandoned, weak and mocked, he swears "I WILL BE THE KING OF THE DISCORD BOT!" (I hope you get it) and starts his hard way, but with rage, to be harder, better, faster, stronger."
-
 ## License
 
 [CC-BY-NC-SA-4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
