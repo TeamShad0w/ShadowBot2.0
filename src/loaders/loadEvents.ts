@@ -24,6 +24,7 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
 
         if(!isAsyncFunction(event.listener)) {
             err += `${Way}/events/${file} is not a proper event module\r\n`;
+            return false;
         }
 
         // TODO : need verification 
