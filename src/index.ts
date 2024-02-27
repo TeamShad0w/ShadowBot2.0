@@ -8,6 +8,7 @@ import loadSlashInteractions from './loaders/loadSlashInteractions';
 import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
+import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
 
 /**
  * Tries to connect the bot Client to Discord servers
@@ -22,19 +23,6 @@ async function login(bot:ClientWithCommands):Promise<number|string> {
         return "bot couldn't login : " + err;
     }
     return 1;
-}
-
-//TODO : jsDoc
-interface ITryFunctionCallback {
-  (bot:ClientWithCommands) : Promise<number|string>;
-}
-
-//TODO : jsDoc
-async function tryFunction(bot:ClientWithCommands, callback:ITryFunctionCallback):Promise<void> {
-    let tryF:number|string = await callback(bot);
-    if( tryF !== 1){
-        throw new Error(tryF.toString());
-    }
 }
 
 //TODO : jsDoc
