@@ -1,5 +1,3 @@
-import path from "path";
+let file = "test.js"
 
-let t = path.dirname(__filename);
-
-console.log(t)
+console.log(file.split(".js").join(""))
