@@ -2,6 +2,9 @@ import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import fs from "fs";
 import path from "path"
+import print from '../utils/consoleHandler';
+import { LogLevel } from '../utils/consoleHandler';
+import { isAsyncFunction } from 'util/types';
 
 //TODO : jsDoc
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
@@ -9,20 +12,18 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
     let err:string = "";
 
     let Way:string = path.dirname(path.dirname(__filename));
-    fs.readdirSync(`${Way}/events`).filter(f => f.endsWith("js")).forEach(async file => {
+    fs.readdirSync(`${Way}/events`).filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async file => {
 
-        let event = require(`${Way}/events/${file}`)
+        let event = await require(`${Way}/events/${file}`);
+
+        if(!isAsyncFunction(event.listener)) {
+            err += `${Way}/events/${file} is not a proper event module\r\n`;
+        }
 
         // TODO : need verification 
+        bot.on(file.slice(0,-3), event.listener);
 
-        if(!event.name || typeof event.name !== "string") {
-            err = `Incorect name for event ${file.slice(0, file.length -3)}.`;
-            return false;
-        }
-        bot.on(file.slice(0,-3), event.bind(null, bot))
-
-        console.log(`EVENTLOAD : ${file} loaded.`)
-
+        print(`EVENTLOAD : ${file} loaded.`, LogLevel.Info);
     });
 
     if (err === "") { return 1; }
