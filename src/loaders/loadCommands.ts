@@ -7,7 +7,11 @@ import { LogLevel } from '../utils/consoleHandler';
 import path from "path";
 
 /**
- * ////TODO : add description
+ * search each js file in commands and 
+ * add the name and fonction of the command in the command collection
+ * @param {ClientWithCommands} bot the client used by the bot
+ * 
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
  */
 export default async (bot:ClientWithCommands):Promise<number|string> => {
 

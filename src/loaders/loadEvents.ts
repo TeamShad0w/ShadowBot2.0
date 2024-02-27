@@ -3,7 +3,13 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import fs from "fs";
 import path from "path"
 
-//TODO : jsDoc
+/**
+ * search each js file in events and 
+ * //// TODO : finish the jsdoc
+ * @param {ClientWithCommands} bot the client used by the bot
+ * 
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ */
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
 
     let err:string = "";
@@ -16,7 +22,7 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
         // TODO : need verification 
 
         if(!event.name || typeof event.name !== "string") {
-            err = `Incorect name for event ${file.slice(0, file.length -3)}.`;
+            err = `Incorect name for event ${file.slice(0,-3)}.`;
             return false;
         }
         bot.on(file.slice(0,-3), event.bind(null, bot))

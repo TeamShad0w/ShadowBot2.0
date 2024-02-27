@@ -12,7 +12,7 @@ import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
 
 /**
  * Tries to connect the bot Client to Discord servers
- * @param {ClientWithCommands} the client used by the bot
+ * @param {ClientWithCommands} bot the client used by the bot
  * 
  * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
  */
