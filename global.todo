@@ -11,4 +11,6 @@ TODO : create npm package once 0.0.2 is done
 
 TODO : ask CODEX's brother for pp of the bot
 
-TODO : ping 
+TODO : make ping execute
+
+TODO : remove all unused imports
