@@ -1,4 +1,4 @@
-import Discord, { messageLink } from 'discord.js';
+import Discord, { messageLink, Options } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 
 //! This command is as it should be, do not modify it, modify external functinos if needed.
@@ -9,7 +9,8 @@ export default {
     permission : null,
     dm : true,
 
-    async run(bot:ClientWithCommands, msg:Discord.Message, interaction:Discord.Interaction): Promise<void> {
-        await msg.reply("pong");
+    //TODO : find type of interaction and replace any with it
+    async run(bot:ClientWithCommands, interaction:any): Promise<void> {
+        await interaction.reply("pong");
     }
 }
