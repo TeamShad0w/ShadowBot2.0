@@ -6,7 +6,13 @@ import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import { isAsyncFunction } from 'util/types';
 
-//TODO : jsDoc
+/**
+ * search each js file in events and 
+ * //// TODO : finish the jsdoc
+ * @param {ClientWithCommands} bot the client used by the bot
+ * 
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ */
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
 
     let err:string = "";
