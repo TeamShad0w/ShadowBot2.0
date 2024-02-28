@@ -16,6 +16,11 @@ export default class ConfigHandler {
         this.config = _config;
     };
 
+    modify = async (modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) => {
+        this.config = await modifingFunction(this.config);
+        this.write();
+    }
+
     write = async () : Promise<string | number> => {
         try{
             let Way:string = path.dirname(path.dirname(__filename));

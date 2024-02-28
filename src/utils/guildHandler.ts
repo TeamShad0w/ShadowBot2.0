@@ -44,11 +44,15 @@ async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild)
         guildData : guildData,
         id : guild.id
     });
-    bot.config.config.guilds.push(guildData);
+    bot.config.modify((config:Iconfig) => {
+        let configBuffer = config;
+        configBuffer.guilds.push(guildData);
+        return configBuffer;
+    });
 }
 
 export default async function setHandlers(bot:ClientWithCommands): Promise<string | number> {
-    let guildsData:Array<GuildHandler> = config.guilds;
+    let guildsData:Array<GuildHandler> = bot.config.config.guilds;
     bot.guilds.cache.each(guild => {
 
         if (guildsData.length === 0) {
@@ -69,8 +73,5 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
             createNewGuildData(bot, guild);
         }
     });
-
-    tryFunction(bot, bot.config.write);
-
     return 1;
 }
