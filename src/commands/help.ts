@@ -2,6 +2,7 @@ import Discord, { messageLink, Options } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import path from "path";
 import fs from "fs"
+import print from '../utils/consoleHandler';
 
 // TODO : jsDoc
 export default {
@@ -15,25 +16,18 @@ export default {
 
         let Way:string = path.dirname(path.dirname(__filename));
 
-        let fmsg = "";
+        let fmsg:string = "";
 
-fmsg += "Here the list of the commands and a short description :";
-fs.readdir(`${Way}/commands`,(err,files) => files.filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async file => {
-    let command = await require(`${Way}/commands/${file}`).default;
-    console.log(command)
-    fmsg += `\r\n> **${command.name}** : *${command.description}*`;
-    console.log(fmsg)
+        fmsg += "Here the list of the commands and a short description :";
+        fs.readdir(`${Way}/commands`, async (err,files) => {
+            files.filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async (file:string, index:number, array:Array<string>) => {
+                let command = await require(`${Way}/commands/${file}`).default;
+                fmsg += `\r\n> **${command.name}** : *${command.description}*`;
 
+                if(index === array.length - 1) {
+                    interaction.reply(fmsg);
+                }
+            })
+        });
     }
-    
-)
-
-// TODO: I NEED HELP IN HELP PLS
-
-/*
-interaction.reply(fmsg)
-*/
-)
-
-}
 };
