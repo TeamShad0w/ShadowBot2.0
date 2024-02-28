@@ -27,8 +27,6 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
             err += `${Way}/events/${file} is not a proper event module\r\n`;
             return false;
         }
-
-        // TODO : need verification 
         bot.on(file.slice(0,-3), (...args:any[]) => event.listener(bot, ...args));
         print(`EVENTLOAD : ${file} loaded.`, LogLevel.Info);
     });
