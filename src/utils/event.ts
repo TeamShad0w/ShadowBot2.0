@@ -1,4 +1,4 @@
-import ClientWithCommands from 'src/utils/clientWithCommands';
+import ClientWithCommands from './clientWithCommands';
 import { Awaitable } from 'discord.js';
 
 export default interface Ievent{

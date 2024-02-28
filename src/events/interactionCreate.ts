@@ -1,8 +1,8 @@
 import loadSlashInteractions from '../loaders/loadSlashInteractions';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
-import ICommand from 'src/utils/command';
-import ClientWithCommands from 'src/utils/clientWithCommands';
+import ICommand from '../utils/command';
+import ClientWithCommands from '../utils/clientWithCommands';
 import Discord, { messageLink } from 'discord.js';
 
 export default {
