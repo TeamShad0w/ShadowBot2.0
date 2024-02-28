@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import fs from "fs";
 import ClientWithCommands from '../utils/clientWithCommands';
-import ICommand from 'src/utils/command';
+import ICommand from '../utils/command';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import path from "path";
