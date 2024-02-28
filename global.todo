@@ -1,20 +1,15 @@
-TODO : create config.json architecture
-(let me do that plz : CODEX)
-
 TODO : setup louis's environnement
 
 TODO : create npm package for 0.0.2
 
-TODO : ask CODEX's brother for pp of the bot
+TODO : find a pp for the bot
 
 TODO : remove all unused imports
 
 TODO : create help command
 
-TODO : create autorole command (yes we'll do it with reaction too but when we will have nice architecture of json shaden)
+TODO : create autorole command with embeds and multiple choice selector ? or do we stick to reactions ?
 
-TODO : handle multiple guilds
-
-TODO : create seup command after finishing slashinteraction loader (we need the options)
+TODO : create setup command after finishing slashinteraction loader (we need the options)
 
 TODO : replace all config.json usage with bot.config
