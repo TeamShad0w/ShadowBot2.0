@@ -6,6 +6,7 @@ import { ITryFunctionCallback, tryFunction } from '../utils/tryFunction';
 import Discord from 'discord.js';
 import setHandlers from '../utils/guildHandler';
 
+// TODO : jsDoc
 export default {
     listener : async (bot:ClientWithCommands) : Promise<void> =>  {
         print("ready");

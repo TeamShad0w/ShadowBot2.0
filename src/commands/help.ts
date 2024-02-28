@@ -3,8 +3,7 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import path from "path";
 import fs from "fs"
 
-//! This command is as it should be, do not modify it, modify external functinos if needed.
-
+// TODO : jsDoc
 export default {
     name : "help",
     description : "replies with a list of commands",

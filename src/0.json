@@ -1,0 +1,17 @@
+{
+    "token" : "__TOKEN__",
+    "guilds" : [
+        {
+            "id" : "__ID__",
+            "database" : {
+                "url" : "__URL__",
+                "APIKey" : "__APIKEY__"
+            },
+            "logChannelID" : "__ID__",
+            "logChannelLogLevel" : "__LOGLEVEL__"
+        },
+        {
+            "ECT..." : ""
+        }
+    ]
+}
