@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import ClientWithCommands from '../utils/clientWithCommands';
+import ClientWithCommands from './clientWithCommands';
 
 export default interface ICommand {
     name : string,
