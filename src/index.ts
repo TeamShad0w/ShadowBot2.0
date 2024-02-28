@@ -9,6 +9,7 @@ import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
 import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
+import ConfigHandler from './utils/configHandler';
 
 /**
  * Tries to connect the bot Client to Discord servers
@@ -31,9 +32,11 @@ async function main():Promise<void> {
     /**
      * The bot Client
      */
-    const bot = new Discord.Client({
+    let bot = new Discord.Client({
         intents: [3276799]
     }) as ClientWithCommands;
+
+    bot.config = new ConfigHandler(Config);
 
     print("starting bot...", LogLevel.Log);
 
