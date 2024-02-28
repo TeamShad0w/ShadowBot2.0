@@ -2,6 +2,7 @@
     "token" : "__INSERT_YOUR_TOKEN_HERE__",
     "guilds" : [
         {
+            "id" : "__THIS_WILL_BE_COMPLETED_AUTOMATICALLY__",
             "database" : {
                 "url" : "__INSERT_URL_MANUALLY_OR_WITH_SETUP_COMMAND__",
                 "APIKey" : "__INSERT_APIKey_MANUALLY_OR_WITH_SETUP_COMMAND__"
