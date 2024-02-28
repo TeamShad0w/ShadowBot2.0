@@ -1,28 +1,15 @@
-import { LogLevel } from '../src/utils/consoleHandler';
-import Discord from 'discord.js'
+import path from "path";
+import fs from "fs"
 
-interface IdatabaseDataHolder {
-    url : string;
-    APIKey : string;
-}
 
-class guildHandler {
-    id : Discord.Snowflake;
-    database : IdatabaseDataHolder;
-    logChannelID : Discord.Snowflake;
-    logLevel : LogLevel;
 
-    constructor(_id:Discord.Snowflake, _databse:IdatabaseDataHolder = { url : "-1", APIKey : "-1" }, _logChannelID:Discord.Snowflake = "-1", _logLevel:LogLevel = LogLevel.Info) {
-        this.id = _id;
-        this.database = _databse;
-        this.logChannelID = _logChannelID;
-        this.logLevel = _logLevel;
-    }
-}
+let fmsg = ""
 
-let guilds:Array<guildHandler> = [];
+fmsg += "Here the list of the commands and a short description :"
+            fs.readdirSync("./src/commands").filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async file => {
+                let command = require(`../src/commands/${file}`)
+                fmsg += `\r\n> **${command.name}** : *${command.description}*`
+    
+});
 
-guilds.push(new guildHandler("54"))
-guilds.push(new guildHandler("42"))
-
-console.log(JSON.stringify(guilds, undefined, 4));
+console.log(fmsg)
