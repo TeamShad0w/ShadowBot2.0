@@ -7,16 +7,19 @@ import { tryFunction } from './tryFunction';
 import fs from 'fs';
 import { Iconfig } from './configHandler';
 
+// TODO : jsDoc
 export interface IdatabaseDataHolder {
     url : string;
     APIKey : string;
 }
 
+// TODO : jsDoc
 export interface IGlobalGuildContainer {
     guildData : GuildHandler;
     id : Discord.Snowflake;
 }
 
+// TODO : jsDoc
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     database : IdatabaseDataHolder;
@@ -24,12 +27,14 @@ export interface IGuildHandlerVarArchitecture {
     logLevel : LogLevel;
 }
 
+// TODO : jsDoc
 export class GuildHandler {
     id : Discord.Snowflake;
     database : IdatabaseDataHolder;
     logChannelID : Discord.Snowflake;
     logLevel : LogLevel;
 
+    // TODO : jsDoc
     constructor(_id:Discord.Snowflake, _databse:IdatabaseDataHolder = { url : "-1", APIKey : "-1" }, _logChannelID:Discord.Snowflake = "-1", _logLevel:LogLevel = LogLevel.Info) {
         this.id = _id;
         this.database = _databse;
@@ -38,6 +43,7 @@ export class GuildHandler {
     }
 }
 
+// TODO : jsDoc
 async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
     let guildData:GuildHandler = new GuildHandler(guild.id);
     bot.guildHandlers.set(guild, {
@@ -51,6 +57,7 @@ async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild)
     });
 }
 
+// TODO : jsDoc
 export default async function setHandlers(bot:ClientWithCommands): Promise<string | number> {
     let guildsData:Array<GuildHandler> = bot.config.config.guilds;
     bot.guilds.cache.each(guild => {
