@@ -9,6 +9,7 @@ import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
 import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
+import { IGlobalGuildContainer } from './utils/guildHandler';
 import ConfigHandler from './utils/configHandler';
 
 /**
@@ -36,6 +37,7 @@ async function main():Promise<void> {
         intents: [3276799]
     }) as ClientWithCommands;
 
+    bot.guildHandlers = new Discord.Collection<Discord.Guild, IGlobalGuildContainer>();
     bot.config = new ConfigHandler(Config);
 
     print("starting bot...", LogLevel.Log);

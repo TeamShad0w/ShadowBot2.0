@@ -1,5 +1,8 @@
 import { IGuildHandlerVarArchitecture } from './guildHandler'; // TODO : create guild handler
+import print from './consoleHandler';
+import { LogLevel } from './consoleHandler';
 import fs from 'fs';
+import path from "path";
 
 export interface Iconfig {
     token : string;
@@ -13,10 +16,10 @@ export default class ConfigHandler {
         this.config = _config;
     };
 
-    async write() : Promise<string | number> {
-        
+    write = async () : Promise<string | number> => {
         try{
-            fs.writeFileSync('../config.json', JSON.stringify(this.config, undefined, 4));
+            let Way:string = path.dirname(path.dirname(__filename));
+            fs.writeFile(`${Way}/config.json`, JSON.stringify(this.config, undefined, 4), () => print("config.json modified", LogLevel.Log));
         }catch(err) {
             return "Wasn't able to write config.json : " + err;
         }
