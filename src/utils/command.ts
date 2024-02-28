@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import ClientWithCommands from './clientWithCommands';
 
+// TODO : jsDoc
 export default interface ICommand {
     name : string,
     description : string,

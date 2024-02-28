@@ -1,3 +1,4 @@
+// TODO : jsDoc
 export enum LogLevel {
     Debug,
     Log,
@@ -7,6 +8,7 @@ export enum LogLevel {
     Critical
 }
 
+// TODO : jsDoc
 export default function print(msg:any, logLevel:LogLevel=LogLevel.Debug, timeDate:boolean=true) {
     let timeDateIndicator:string = timeDate ? "[" + new Date().toLocaleString().replace(", ", " at ") + "]" : "";
     switch (logLevel) {

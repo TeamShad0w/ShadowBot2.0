@@ -1,8 +1,7 @@
 import Discord, { messageLink, Options } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 
-//! This command is as it should be, do not modify it, modify external functinos if needed.
-
+// TODO : jsDoc
 export default {
     name : "help",
     description : "replies with a list of commands",
