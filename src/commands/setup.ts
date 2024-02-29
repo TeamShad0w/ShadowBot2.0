@@ -7,8 +7,7 @@ export default {
     permission : Discord.PermissionFlagsBits.ManageGuild,
     dm : true,
 
-    //TODO : find type of interaction and replace any with it
-    async run(bot:ClientWithCommands, interaction:any): Promise<void> {
+    async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
         await interaction.reply("pong");
     }
 }
