@@ -1,10 +1,18 @@
-import Discord, { messageLink, Options } from 'discord.js';
+import Discord, { ChatInputCommandInteraction, Interaction, messageLink, Options } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import path from "path";
 import fs from "fs"
 import print from '../utils/consoleHandler';
 
-// TODO : jsDoc
+/**
+ * search each js file in commands and 
+ * add the name and fonction of the command in the list 
+ * return the list as a reply of the msg
+ * @param {ClientWithCommands} bot the client used by the bot
+ * @param {ChatInputCommandInteraction} interaction the interaction from the user
+ * 
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ */
 export default {
     name : "help",
     description : "replies with a list of commands",
