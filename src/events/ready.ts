@@ -7,6 +7,14 @@ import Discord from 'discord.js';
 import setHandlers from '../utils/guildHandler';
 
 // TODO : jsDoc
+
+/**
+ * simple fonction that print when ur bot is online 
+ * @param {ClientWithCommands} bot the client used by the bot
+ * 
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ */
+
 export default {
     listener : async (bot:ClientWithCommands) : Promise<void> =>  {
         print("ready");

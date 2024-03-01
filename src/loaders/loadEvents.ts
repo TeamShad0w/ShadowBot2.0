@@ -9,7 +9,7 @@ import Ievent from '../utils/event';
 
 /**
  * search each js file in events and 
- * //// TODO : finish the jsdoc
+ * verifie if the file loaded successfully
  * @param {ClientWithCommands} bot the client used by the bot
  * 
  * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.

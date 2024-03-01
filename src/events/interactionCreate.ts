@@ -6,6 +6,7 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import Discord, { messageLink } from 'discord.js';
 
 // TODO : jsDoc
+
 export default {
     listener : async (bot:ClientWithCommands, interaction:Discord.Interaction) : Promise<void> => {
         if(interaction.type === Discord.InteractionType.ApplicationCommand){
