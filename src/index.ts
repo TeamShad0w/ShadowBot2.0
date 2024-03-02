@@ -33,12 +33,7 @@ async function main():Promise<void> {
     /**
      * The bot Client
      */
-    let bot = new Discord.Client({
-        intents: [3276799]
-    }) as ClientWithCommands;
-
-    bot.guildHandlers = new Discord.Collection<Discord.Guild, IGlobalGuildContainer>();
-    bot.config = new ConfigHandler(Config);
+    let bot = new ClientWithCommands(Config, { intents: [3276799] });
 
     print("starting bot...", LogLevel.Log);
 

@@ -50,7 +50,7 @@ async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild)
         guildData : guildData,
         id : guild.id
     });
-    bot.config.modify((config:Iconfig) => {
+    bot.configHandler.modify((config:Iconfig) => {
         let configBuffer = config;
         configBuffer.guilds.push(guildData);
         return configBuffer;
@@ -59,7 +59,7 @@ async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild)
 
 // TODO : jsDoc
 export default async function setHandlers(bot:ClientWithCommands): Promise<string | number> {
-    let guildsData:Array<GuildHandler> = bot.config.config.guilds;
+    let guildsData:Array<GuildHandler> = bot.configHandler.value.guilds;
     bot.guilds.cache.each(guild => {
 
         if (guildsData.length === 0) {
