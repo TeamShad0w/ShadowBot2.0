@@ -1,12 +1,26 @@
-import Discord, { BurstHandlerMajorIdKey } from 'discord.js';
+import Discord, { BurstHandlerMajorIdKey, SlashCommandBuilder } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import ICommand from '../utils/command';
-import { CommandOptionType } from '../utils/command'
+import { IOptions } from '../utils/command'
 
 //TODO : create slash command options types interfaces
 
+
+function simpleCommandSetup(slashCommand:any, _option:IOptions) : void {
+    
+    slashCommand[`add${_option.type}Option`]((option:any) => {
+        option.setName(_option.name)
+        .setDescription(_option.description)
+        .setRequired(_option.required);
+
+        if(_option.choices){
+            _option.choices.forEach(choice => option.addChoices(choice));
+        }
+        return option;
+    });
+}
 
 //TODO : jsDoc
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
@@ -27,21 +41,31 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
         if(command.options && command.options.length >= 1){
             for(let i = 0; i < command.options.length; i++){
                 if(command.options[i] !== undefined){
-                    //TODO : finish this
-                    /*
-                    switch (command.options[i].type) {
-                        case CommandOptionType.String:
-                            slashCommand[`add${command.options[i].type.toString()}Option` as "addStringOption"]((option:Discord.SlashCommandStringOption) => {
-                                
-                                return option.setName(command.options[i].name)
-                                .setDescription("e")
-                                .setRequired(false)
-                                .addChoices()
-                            });
-                            break;
-                        default :
-                            err += `Unknown option type for ${command.name}/${command.options[i].name} : ${command.options[i].type}\r\n`;
-                    }*/
+                    let _option:IOptions = command.options[i]
+                    switch(_option.type){
+                        case "String" :
+                        case "Number" :
+                        case "Integer" :
+
+                            simpleCommandSetup(slashCommand, _option);
+                        break;
+                        case "Boolean" :
+                        case "User" :
+                        case "Channel" :
+                        case "Role" :
+                        case "Mentionable" :
+                        case "Attachment" :
+                            simpleCommandSetup(slashCommand, _option);
+                        break;
+                        case "Subcommand" :
+                            //TODO : handle subcommands
+                        break;
+                        default:
+                            err += `Unknown option type ${command.options[i].type} in ${command.name}.`
+                        break;
+
+                    }
+
                 }else{
                     err += `Error while looping through ${command.name}'s options : option don't exist at index ${i}.`;
                 }
