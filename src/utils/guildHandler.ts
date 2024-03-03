@@ -14,6 +14,12 @@ export interface IdatabaseDataHolder {
 }
 
 // TODO : jsDoc
+export interface ILogChannelDataHolder {
+    id : Discord.Snowflake;
+    logLevel : LogLevel;
+}
+
+// TODO : jsDoc
 export interface IGlobalGuildContainer {
     guildData : GuildHandler;
     id : Discord.Snowflake;
@@ -23,28 +29,25 @@ export interface IGlobalGuildContainer {
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     database : IdatabaseDataHolder;
-    logChannelID : Discord.Snowflake;
-    logLevel : LogLevel;
+    logChannel : ILogChannelDataHolder;
 }
 
 // TODO : jsDoc
 export class GuildHandler {
     id : Discord.Snowflake;
     database : IdatabaseDataHolder;
-    logChannelID : Discord.Snowflake;
-    logLevel : LogLevel;
+    logChannel : ILogChannelDataHolder;
 
     // TODO : jsDoc
-    constructor(_id:Discord.Snowflake, _databse:IdatabaseDataHolder = { url : "-1", APIKey : "-1" }, _logChannelID:Discord.Snowflake = "-1", _logLevel:LogLevel = LogLevel.Info) {
+    constructor(_id:Discord.Snowflake, _databse:IdatabaseDataHolder = { url : "-1", APIKey : "-1" }, _logChannel:ILogChannelDataHolder = { id : "-1", logLevel : LogLevel.Info}) {
         this.id = _id;
         this.database = _databse;
-        this.logChannelID = _logChannelID;
-        this.logLevel = _logLevel;
+        this.logChannel = _logChannel;
     }
 }
 
 // TODO : jsDoc
-async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
+export async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
     let guildData:GuildHandler = new GuildHandler(guild.id);
     bot.guildHandlers.set(guild, {
         guildData : guildData,
@@ -72,7 +75,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
                 return true;
             }
             bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(guild.id, guildData.database, guildData.logChannelID, guildData.logLevel),
+                guildData : new GuildHandler(guild.id, guildData.database, guildData.logChannel),
                 id : guild.id
             });
             return false;
