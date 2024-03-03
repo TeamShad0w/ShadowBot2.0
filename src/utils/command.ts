@@ -5,11 +5,12 @@ import ClientWithCommands from './clientWithCommands';
 export interface IOptions {
     type : "String" | "Number" | "Integer" | "Boolean" | "User" | "Channel" | "Role" | "Mentionable" | "Attachment" | "Subcommand" | "SubcommandGroup";
     name : string,
-    description : string
-    required : boolean,
+    description : string,
+    required? : boolean,
     choices? : Array<{
         name : string, value : string | number
-    }>
+    }>,
+    options? : Array<IOptions>
 }
 
 // TODO : jsDoc
