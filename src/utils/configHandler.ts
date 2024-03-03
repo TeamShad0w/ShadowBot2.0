@@ -1,8 +1,10 @@
-import { IGuildHandlerVarArchitecture } from './guildHandler';
+import { IGuildHandlerVarArchitecture, createNewGuildData } from './guildHandler';
 import print from './consoleHandler';
 import { LogLevel } from './consoleHandler';
 import fs from 'fs';
 import path from "path";
+import Discord from 'discord.js';
+import ClientWithCommands from './clientWithCommands';
 
 // TODO : jsDoc
 export interface Iconfig {
@@ -19,8 +21,15 @@ export default class ConfigHandler {
     };
 
     // TODO : jsDoc
-    modify = async (modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) => {
+    modify = async (modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) : Promise<void> => {
         this.value = await modifingFunction(this.value);
+        this.write();
+    }
+
+    // TODO : jsDoc
+    modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:(guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture) : Promise<void> => {
+        if(!this.value.guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
+        this.value.guilds[this.value.guilds.findIndex(guild => guild.id === _guild.id)] = await builder(this.value.guilds[this.value.guilds.findIndex(guild => guild.id === _guild.id)]);
         this.write();
     }
 
