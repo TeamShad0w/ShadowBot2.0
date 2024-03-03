@@ -10,6 +10,6 @@ TODO : create help command
 
 TODO : create autorole command with embeds and multiple choice selector ? or do we stick to reactions ?
 
-TODO : create setup command after finishing slashinteraction loader (we need the options)
+TODO : create setup command
 
 TODO : replace all config.json usage with bot.config
