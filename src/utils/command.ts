@@ -10,6 +10,7 @@ export interface IOptions {
     choices? : Array<{
         name : string, value : string | number
     }>,
+    run? : (bot: ClientWithCommands, interaction:Discord.Interaction) => Promise<void>
     options? : Array<IOptions>
 }
 
