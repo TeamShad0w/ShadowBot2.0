@@ -13,3 +13,7 @@ TODO : create autorole command with embeds and multiple choice selector ? or do 
 TODO : create setup command
 
 TODO : replace all config.json usage with bot.config
+
+TODO : overwrite toString() for all object for wich the toString() function doesn't return useful information for debugging
+
+TODO : let place to your imagination and go create commands !
