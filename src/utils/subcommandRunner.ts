@@ -15,8 +15,8 @@ async function findSubcommand(root:IOptions | ICommand, name:string, bot:ClientW
 
 export default async function subcomandRunner(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction, command:ICommand) : Promise<void> {
     if(!command.options || !interaction.options.getSubcommand()) { return; }
-    if(command.options.every(option => option.type !== ('Subcommand' || 'SubcommandGroup'))) { return; }
-    if(interaction.options.getSubcommandGroup() === null) { return await findSubcommand(command, interaction.options.getSubcommand(), bot, interaction)}
+    if(command.options.every(option => option.type !== 'Subcommand' && option.type !== 'SubcommandGroup')) { return; }
+    if(interaction.options.getSubcommandGroup() === null) { return await findSubcommand(command, interaction.options.getSubcommand(), bot, interaction); }
     command.options.forEach(async option => {
         if(option.type !== 'SubcommandGroup') { return; }
         if(!option.options || option.options.every(option => option.type !== 'Subcommand')) { throw new Error(`Subcommand group ${option.name} have no subcommands.\r\n`); }
