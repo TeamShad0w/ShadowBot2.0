@@ -29,15 +29,30 @@ export default class ConfigHandler {
     // TODO : jsDoc
     modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:(guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture) : Promise<void> => {
         if(!this.value.guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
-        this.value.guilds[this.value.guilds.findIndex(guild => guild.id === _guild.id)] = await builder(this.value.guilds[this.value.guilds.findIndex(guild => guild.id === _guild.id)]);
-        this.write();
+        let index = this.value.guilds.findIndex(guild => guild.id === _guild.id);
+        this.value.guilds[index] = await builder(this.value.guilds[index]);
+        await this.write();
+    }
+
+    // TODO : jsDoc
+    resetGuildData = async(bot:ClientWithCommands, _guild:Discord.Guild) : Promise<IGuildHandlerVarArchitecture> => {
+        let index = this.value.guilds.findIndex(guild => guild.id === _guild.id);
+        let oldData = this.value.guilds.splice(index, 1)[0];
+       await createNewGuildData(bot, _guild);
+       return oldData;
+    }
+
+    // TODO : jsDoc
+    getGuildData = async(_guild:Discord.Guild) : Promise<Array<IGuildHandlerVarArchitecture>> => {
+        return this.value.guilds.filter(guild => guild.id === _guild.id);
     }
 
     // TODO : jsDoc
     write = async () : Promise<string | number> => {
         try{
             let Way:string = path.dirname(path.dirname(__filename));
-            fs.writeFile(`${Way}/config.json`, JSON.stringify(this.value, undefined, 4), () => print("config.json modified", LogLevel.Log));
+            fs.writeFileSync(`${Way}/config.json`, JSON.stringify(this.value, undefined, 4));
+            print("config.json modified", LogLevel.Log)
         }catch(err) {
             return "Wasn't able to write config.json : " + err;
         }
