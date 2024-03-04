@@ -22,10 +22,11 @@
   "homepage": "https://github.com/C0dex73/ShadowBot2.0#readme",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "node-fetch": "^3.3.2"
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.20",
+    "@types/request": "^2.48.12",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
