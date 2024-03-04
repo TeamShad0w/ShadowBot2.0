@@ -38,8 +38,8 @@ export default class ConfigHandler {
     resetGuildData = async(bot:ClientWithCommands, _guild:Discord.Guild) : Promise<IGuildHandlerVarArchitecture> => {
         let index = this.value.guilds.findIndex(guild => guild.id === _guild.id);
         let oldData = this.value.guilds.splice(index, 1)[0];
-       await createNewGuildData(bot, _guild);
-       return oldData;
+        await createNewGuildData(bot, _guild);
+        return oldData;
     }
 
     // TODO : jsDoc
