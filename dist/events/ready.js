@@ -5,6 +5,7 @@ const loadSlashInteractions_1 = tslib_1.__importDefault(require("../loaders/load
 const consoleHandler_1 = tslib_1.__importDefault(require("../utils/consoleHandler"));
 const consoleHandler_2 = require("../utils/consoleHandler");
 const tryFunction_1 = require("../utils/tryFunction");
+const guildHandler_1 = tslib_1.__importDefault(require("../utils/guildHandler"));
 exports.default = {
     listener: async (bot) => {
         (0, consoleHandler_1.default)("ready");
@@ -12,6 +13,7 @@ exports.default = {
             return;
         }
         await (0, tryFunction_1.tryFunction)(bot, loadSlashInteractions_1.default);
+        await (0, tryFunction_1.tryFunction)(bot, guildHandler_1.default);
         (0, consoleHandler_1.default)(`${bot.user.username} online !`, consoleHandler_2.LogLevel.Info);
     }
 };

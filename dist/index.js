@@ -6,6 +6,7 @@ const config_json_1 = tslib_1.__importDefault(require("./config.json"));
 const loadCommands_1 = tslib_1.__importDefault(require("./loaders/loadCommands"));
 const loadDatabase_1 = tslib_1.__importDefault(require("./loaders/loadDatabase"));
 const loadEvents_1 = tslib_1.__importDefault(require("./loaders/loadEvents"));
+const clientWithCommands_1 = tslib_1.__importDefault(require("./utils/clientWithCommands"));
 const consoleHandler_1 = tslib_1.__importDefault(require("./utils/consoleHandler"));
 const consoleHandler_2 = require("./utils/consoleHandler");
 const tryFunction_1 = require("./utils/tryFunction");
@@ -19,9 +20,7 @@ async function login(bot) {
     return 1;
 }
 async function main() {
-    const bot = new discord_js_1.default.Client({
-        intents: [3276799]
-    });
+    let bot = new clientWithCommands_1.default(config_json_1.default, { intents: [3276799] });
     (0, consoleHandler_1.default)("starting bot...", consoleHandler_2.LogLevel.Log);
     await (0, tryFunction_1.tryFunction)(bot, login);
     (0, consoleHandler_1.default)("bot logged in.", consoleHandler_2.LogLevel.Info);
