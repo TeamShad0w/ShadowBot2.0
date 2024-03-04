@@ -1,22 +1,43 @@
+import Discord from "discord.js";
+import ClientWithCommands from "./clientWithCommands";
+
 // TODO : jsDoc
 export enum LogLevel {
     Debug,
     Log,
     Info,
-    Warning,
+    Warn,
     Error,
     Critical
 }
 
+
+export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | null, logLevel:LogLevel, msg:any) : Promise<void> {
+    await Promise.all(bot.guilds.cache.map(async _guild => {
+        if(guild !== null && guild.id !== _guild.id) { return _guild; }
+        await Promise.all((await bot.configHandler.getGuildData(_guild)).map(async guildData => {
+            if(logLevel < guildData.logChannel.logLevel) { return guildData; }
+            const logChannel = await _guild.channels.fetch(guildData.logChannel.id)
+            if(logChannel === null || !logChannel.isTextBased()) { return guildData; }
+            await logChannel.send(msg);
+            return guildData;
+        }));
+        return _guild
+    }));
+}
+
+export async function releaseLogsFromPipe(bot:ClientWithCommands, guild:Discord.Guild | null) : Promise<void> {
+    bot.logPipe.forEach(async log => {
+        await logOnGuild(bot, guild, log[1], log[0]);
+    });
+}
+
 // TODO : jsDoc
-export default function print(msg:any, logLevel:LogLevel=LogLevel.Debug, timeDate:boolean=true) {
-    let timeDateIndicator:string = timeDate ? "[" + new Date().toLocaleString().replace(", ", " at ") + "]" : "";
-    switch (logLevel) {
-        case LogLevel.Debug: console.info(timeDateIndicator + " : DEBUG ==> ", msg); break;
-        case LogLevel.Log: console.log(timeDateIndicator + " : LOG ==> ", msg); break;
-        case LogLevel.Info: console.info(timeDateIndicator + " : INFO ==> ", msg); break;
-        case LogLevel.Warning: console.warn(timeDateIndicator + " : WARNING ==> ", msg); break;
-        case LogLevel.Error: console.error(timeDateIndicator + " : ERROR ==> ", msg); break;
-        case LogLevel.Critical: console.error(timeDateIndicator + " : CRITICAL ERROR ==> ", msg); break;
-    }
+export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, bot:ClientWithCommands, guild:Discord.Guild | null, hold=false, timeDate:boolean=true) : Promise<void> {
+    let timeDateIndicator = timeDate ? "[" + new Date().toLocaleString().replace(", ", " at ") + "]" : "";
+    let formattedMsg = `${timeDateIndicator} : ${LogLevel[logLevel].toUpperCase() === "CRITICAL" ? "CRITICAL ERROR" : LogLevel[logLevel].toUpperCase()} ==> ${msg}`;
+    let logLevelString = LogLevel[logLevel].toLowerCase() as "debug" | "log" | "info" | "warn" | "error" | "critical";
+    console[`${logLevelString === "critical" ? "error" : logLevelString}`](formattedMsg);
+    if(!hold) { return await logOnGuild(bot, guild, logLevel, formattedMsg); }
+    bot.logPipe.push([formattedMsg, logLevel]);
 }
