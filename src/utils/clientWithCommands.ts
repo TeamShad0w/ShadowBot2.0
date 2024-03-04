@@ -10,7 +10,7 @@ export default class ClientWithCommands extends Discord.Client {
     public commands: Discord.Collection<string, ICommand>;
     public guildHandlers : Discord.Collection<Discord.Guild, IGlobalGuildContainer>;
     public configHandler : ConfigHandler;
-    public logPipe : Array<[string, LogLevel]> = [];
+    public logPipe : Array<[string, LogLevel, Date, Discord.Guild | null]> = [];
     constructor(Config:Iconfig, options:any){
         super(options);
         this.commands = new Discord.Collection<string, ICommand>();

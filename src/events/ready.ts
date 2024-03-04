@@ -20,7 +20,7 @@ export default {
         if (bot.user === null) { return; }
         await tryFunction(bot, loadSlashInteractions);
         await tryFunction(bot, setHandlers);
-        await releaseLogsFromPipe(bot, null);
+        await releaseLogsFromPipe(bot);
         print(`${bot.user.username} online !`, LogLevel.Info, bot, null);
     }
 }
