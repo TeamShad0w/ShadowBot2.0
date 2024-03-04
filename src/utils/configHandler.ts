@@ -21,9 +21,9 @@ export default class ConfigHandler {
     };
 
     // TODO : jsDoc
-    modify = async (modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) : Promise<void> => {
+    modify = async (bot:ClientWithCommands, guild:Discord.Guild, modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) : Promise<void> => {
         this.value = await modifingFunction(this.value);
-        this.write();
+        this.write(bot, guild);
     }
 
     // TODO : jsDoc
@@ -31,7 +31,7 @@ export default class ConfigHandler {
         if(!this.value.guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
         let index = this.value.guilds.findIndex(guild => guild.id === _guild.id);
         this.value.guilds[index] = await builder(this.value.guilds[index]);
-        await this.write();
+        await this.write(bot, _guild);
     }
 
     // TODO : jsDoc
@@ -48,11 +48,11 @@ export default class ConfigHandler {
     }
 
     // TODO : jsDoc
-    write = async () : Promise<string | number> => {
+    write = async (bot:ClientWithCommands, guild:Discord.Guild) : Promise<string | number> => {
         try{
             let Way:string = path.dirname(path.dirname(__filename));
             fs.writeFileSync(`${Way}/config.json`, JSON.stringify(this.value, undefined, 4));
-            print("config.json modified", LogLevel.Log)
+            print("config.json modified", LogLevel.Log, bot, guild)
         }catch(err) {
             return "Wasn't able to write config.json : " + err;
         }

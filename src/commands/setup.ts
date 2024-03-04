@@ -123,7 +123,7 @@ export default {
                                 { name : "Debug", value : LogLevel.Debug },
                                 { name : "Log", value : LogLevel.Log },
                                 { name : "Info", value : LogLevel.Info },
-                                { name : "Warning", value : LogLevel.Warning },
+                                { name : "Warning", value : LogLevel.Warn },
                                 { name : "Error", value : LogLevel.Error },
                                 { name : "Critical", value : LogLevel.Critical }
                             ]
@@ -210,7 +210,7 @@ export default {
                                 await response.edit({embeds : [validationNotReceivedEmbed], components : []});
                             }
                         }catch (err) {
-                            print(err, LogLevel.Error);
+                            print(err, LogLevel.Error, bot, interaction.guild);
                             validationNotReceivedEmbed.setDescription("Confirmation not received within 60seconds.");
                             await response.edit({embeds : [validationNotReceivedEmbed], components : []});
                         }

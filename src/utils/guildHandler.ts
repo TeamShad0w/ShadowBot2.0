@@ -53,7 +53,7 @@ export async function createNewGuildData(bot : ClientWithCommands, guild:Discord
         guildData : guildData,
         id : guild.id
     });
-    bot.configHandler.modify((config:Iconfig) => {
+    bot.configHandler.modify(bot, guild, (config:Iconfig) => {
         let configBuffer = config;
         configBuffer.guilds.push(guildData);
         return configBuffer;

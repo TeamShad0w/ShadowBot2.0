@@ -35,31 +35,31 @@ async function main():Promise<void> {
      */
     let bot = new ClientWithCommands(Config, { intents: [3276799] });
 
-    print("starting bot...", LogLevel.Log);
+    print("starting bot...", LogLevel.Log, bot, null, true);
 
     await tryFunction(bot, login);
 
-    print("bot logged in.", LogLevel.Info);
+    print("bot logged in.", LogLevel.Info, bot, null, true);
 
-    print("connecting to database...", LogLevel.Log);
+    print("connecting to database...", LogLevel.Log, bot, null, true);
 
     await tryFunction(bot, loadDatabase);
 
-    print("bot connected to database.", LogLevel.Info);
+    print("bot connected to database.", LogLevel.Info, bot, null, true);
 
-    print("loading events...", LogLevel.Log);
+    print("loading events...", LogLevel.Log, bot, null, true);
 
     await tryFunction(bot, loadEvents);
 
-    print("events loaded.", LogLevel.Info);
+    print("events loaded.", LogLevel.Info, bot, null, true);
 
     bot.commands = new Discord.Collection()
 
-    print("loading commands...", LogLevel.Log);
+    print("loading commands...", LogLevel.Log, bot, null, true);
 
     await tryFunction(bot, loadCommands);
 
-    print("commands loaded.", LogLevel.Info);
+    print("commands loaded.", LogLevel.Info, bot, null, true);
 }
 
 main();

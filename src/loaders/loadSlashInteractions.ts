@@ -22,7 +22,7 @@ function simpleCommandSetup(slashCommand:any, _option:IOptions) : void {
 }
 
 //TODO : jsDoc
-function completeCommandSetup(err:string, _command:[ICommand, "command"] | [IOptions, "option"], constructor:Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder) : [string, Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder] {    
+function completeCommandSetup(bot:ClientWithCommands, err:string, _command:[ICommand, "command"] | [IOptions, "option"], constructor:Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder) : [string, Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder] {    
     constructor.setName(_command[0].name)
     .setDescription(_command[0].description);
     
@@ -54,7 +54,7 @@ function completeCommandSetup(err:string, _command:[ICommand, "command"] | [IOpt
                             break;
                         }
                         constructor.addSubcommand(builder => {
-                            let bufferTuple = completeCommandSetup(err, [_option, "option"], builder);
+                            let bufferTuple = completeCommandSetup(bot, err, [_option, "option"], builder);
                             err += bufferTuple[0];
                             if(bufferTuple[1] instanceof Discord.SlashCommandSubcommandBuilder) { return bufferTuple[1]; }
                             err += `Error while loading ${command.name}'s subcommand (${_option.name}) : returned constructor is wrong type (${typeof bufferTuple[1]}).\r\n`;
@@ -72,7 +72,7 @@ function completeCommandSetup(err:string, _command:[ICommand, "command"] | [IOpt
                             break;
                         }
                         constructor.addSubcommandGroup(builder => {
-                            let bufferTuple = completeCommandSetup(err, [_option, "option"], builder);
+                            let bufferTuple = completeCommandSetup(bot, err, [_option, "option"], builder);
                             err += bufferTuple[0];
                             if(bufferTuple[1] instanceof Discord.SlashCommandSubcommandGroupBuilder) { return bufferTuple[1]; }
                             err += `Error while loading ${command.name}'s subcommand (${_option.name}) : returned constructor is wrong type (${typeof bufferTuple[1]}).\r\n`;
@@ -90,7 +90,7 @@ function completeCommandSetup(err:string, _command:[ICommand, "command"] | [IOpt
         });
     }
 
-    if(constructor instanceof Discord.SlashCommandBuilder){ print("Slash interaction : " + command.name + " is loaded.", LogLevel.Log); }
+    if(constructor instanceof Discord.SlashCommandBuilder){ print("Slash interaction : " + command.name + " is loaded.", LogLevel.Log, bot, null, true); }
 
     return [err, constructor];
 }
@@ -105,7 +105,7 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
     let commands:Array<Discord.SlashCommandBuilder> = [];
 
     bot.commands.forEach((command:ICommand) => {
-        let bufferTuple = completeCommandSetup(err, [command, "command"], new Discord.SlashCommandBuilder());
+        let bufferTuple = completeCommandSetup(bot, err, [command, "command"], new Discord.SlashCommandBuilder());
         err += bufferTuple[0];
         if(bufferTuple[1] instanceof Discord.SlashCommandBuilder) { return commands.push(bufferTuple[1]); }
         err += `Error while loading ${command.name} : returned constructor is wrong type (subcommand builder).\r\n`;
