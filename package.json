@@ -7,7 +7,7 @@
     "getDependencies" : "yarn install",
     "testJs": "node test/test.js",
     "testTs": "ts-node test/test.ts",
-    "build": "getDependencies && tsc -p .",
+    "build": "yarn getDependencies && tsc -p .",
     "tsStart": "yarn getDependencies && ts-node src/index.ts",
     "jsStart": "yarn getDependencies && node dist/index.js"
   },
