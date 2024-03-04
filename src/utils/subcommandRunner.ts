@@ -6,9 +6,9 @@ import print from './consoleHandler';
 async function findSubcommand(root:IOptions | ICommand, name:string, bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction) : Promise<void> {
     if(!root.options) { return; }
     await Promise.all(root.options.map(async option => {
-        if(option.type !== 'Subcommand') { return; }
+        if(option.type !== 'Subcommand') { return option; }
         if(!option.run) { throw new Error(`Subcommand ${option.name} have no run function.\r\n`); }
-        if(option.name !== name) { return; }
+        if(option.name !== name) { return option; }
         await option.run(bot, interaction);
     }));
 }
