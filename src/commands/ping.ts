@@ -16,6 +16,6 @@ export default {
     dm : true,
 
     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
-        await interaction.reply("pong");
+        await interaction.followUp("pong");
     }
 }
