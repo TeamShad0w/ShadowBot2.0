@@ -73,3 +73,11 @@ export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, b
     if(!hold) { return await logOnGuild(bot, guild, logLevel, dateTime, msg.toString()); }
     bot.logPipe.push([msg.toString(), logLevel, dateTime, guild]);
 }
+
+export async function simplePrint(msg:any, logLevel:LogLevel=LogLevel.Debug){
+    let dateTime = new Date();
+    let dateTimeIndicator = "[" + dateTime.toLocaleString().replace(", ", " at ") + "]";
+    let formattedMsg = `${dateTimeIndicator} : ${LogLevel[logLevel].toUpperCase() === "CRITICAL" ? "CRITICAL ERROR" : LogLevel[logLevel].toUpperCase()} ==> ${msg}`;
+    let logLevelString = LogLevel[logLevel].toLowerCase() as "debug" | "log" | "info" | "warn" | "error" | "critical";
+    console[`${logLevelString === "critical" ? "error" : logLevelString}`](formattedMsg);
+}
