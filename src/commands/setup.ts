@@ -17,67 +17,6 @@ export default {
     dm : false,
     options : [
         {
-            name : "database",
-            description : "all the settings for the database",
-            type : "SubcommandGroup",
-            options : [
-                {
-                    name : "url",
-                    description : "change the url to connect to the server holding the database",
-                    type : "Subcommand",
-                    options : [
-                        {
-                            name : "url",
-                            description : "the url of the server holding the database",
-                            type : "String",
-                            required : true
-                        },
-                        {
-                            name : "return_data",
-                            description : "wether or not to return the new data",
-                            type : "Boolean"
-                        }
-                    ],
-                    //TODO : jsDoc
-                    async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
-                        if(!interaction.guild) { return; }
-                        bot.configHandler.modifyGuildSetup(bot, interaction.guild, guildData => {
-                            guildData.database.url = interaction.options.getString("url") ?? "-1";
-                            return guildData;
-                        });
-                        await interaction.followUp("This server setup has been changed.");
-                    }
-                },
-                {
-                    name : "api_key",
-                    description : "change the api key to connect to the server holding the database",
-                    type : "Subcommand",
-                    options : [
-                        {
-                            name : "api_key",
-                            description : "the api_key to identify the bot to the server",
-                            type : "String",
-                            required : true
-                        },
-                        {
-                            name : "return_data",
-                            description : "wether or not to return the new data",
-                            type : "Boolean"
-                        }
-                    ],
-                    //TODO : jsDoc
-                    async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
-                        if(!interaction.guild) { return; }
-                        bot.configHandler.modifyGuildSetup(bot, interaction.guild, guildData => {
-                            guildData.database.APIKey = interaction.options.getString("api_key") ?? "-1";
-                            return guildData;
-                        });
-                        await interaction.followUp("This server setup has been changed.");
-                    }
-                }
-            ]
-        },
-        {
             name : "logs",
             description : "all the settings for the displayed logs",
             type : "SubcommandGroup",

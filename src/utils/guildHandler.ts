@@ -8,12 +8,6 @@ import fs from 'fs';
 import { Iconfig } from './configHandler';
 
 // TODO : jsDoc
-export interface IdatabaseDataHolder {
-    url : string;
-    APIKey : string;
-}
-
-// TODO : jsDoc
 export interface ILogChannelDataHolder {
     id : Discord.Snowflake;
     logLevel : LogLevel;
@@ -28,20 +22,17 @@ export interface IGlobalGuildContainer {
 // TODO : jsDoc
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
-    database : IdatabaseDataHolder;
     logChannel : ILogChannelDataHolder;
 }
 
 // TODO : jsDoc
 export class GuildHandler {
     id : Discord.Snowflake;
-    database : IdatabaseDataHolder;
     logChannel : ILogChannelDataHolder;
 
     // TODO : jsDoc
-    constructor(_id:Discord.Snowflake, _databse:IdatabaseDataHolder = { url : "-1", APIKey : "-1" }, _logChannel:ILogChannelDataHolder = { id : "-1", logLevel : LogLevel.Info}) {
+    constructor(_id:Discord.Snowflake, _logChannel:ILogChannelDataHolder = { id : "-1", logLevel : LogLevel.Info}) {
         this.id = _id;
-        this.database = _databse;
         this.logChannel = _logChannel;
     }
 }
@@ -75,7 +66,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
                 return true;
             }
             bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(guild.id, guildData.database, guildData.logChannel),
+                guildData : new GuildHandler(guild.id, guildData.logChannel),
                 id : guild.id
             });
             return false;
