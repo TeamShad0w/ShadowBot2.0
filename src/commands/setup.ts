@@ -1,7 +1,7 @@
 import Discord, { ActionRowBuilder, DiscordAPIError, messageLink, Options } from 'discord.js';
-import { LogLevel } from '../utils/consoleHandler';
+import { LogLevel, simplePrint } from '../utils/consoleHandler';
 import ClientWithCommands from '../utils/clientWithCommands';
-import setHandlers, { IGuildHandlerVarArchitecture } from '../utils/guildHandler';
+import setHandlers, { IGuildHandlerVarArchitecture, Node } from '../utils/guildHandler';
 import { tryFunction } from '../utils/tryFunction';
 import print from '../utils/consoleHandler';
 import { fstat } from 'fs';
@@ -41,7 +41,7 @@ export default {
                     //TODO : jsDoc
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
-                        bot.configHandler.modifyGuildSetup(bot, interaction.guild, guildData => {
+                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
                             guildData.logChannel.id = interaction.options.getChannel("log_channel")?.id ?? "-1";
                             return guildData;
                         });
@@ -76,7 +76,7 @@ export default {
                     //TODO : jsDoc
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
-                        await bot.configHandler.modifyGuildSetup(bot, interaction.guild, async guildData => {
+                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
                             guildData.logChannel.logLevel = interaction.options.getInteger("log_level") ?? LogLevel.Info;
                             return guildData;
                         });
@@ -94,12 +94,25 @@ export default {
                     name : "reset",
                     description : "resets the guild data",
                     type : "Subcommand",
+                    options : [
+                        {
+                            name : "node",
+                            description : "the parameter of parameter group to reset",
+                            type : "String",
+                            choices : [
+                                { name : "root.logChannel", value : "logChannel" },
+                                { name : "root.logChannel.id", value : "logChannel.id" },
+                                { name : "root.logChannel.logLevel", value : "logChannel.logLevel" }
+                            ]
+                        }
+                    ],
                     //TODO : jsDoc
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void>{
                         if(!interaction.guild) { return; }
+                        const node = (interaction.options.getString("node") ?? "root") as Node;
                         const embed = new Discord.EmbedBuilder()
                             .setColor(0x26c7d9)
-                            .setTitle("Are you sure you want to reset this guild's data ?")
+                            .setTitle("Are you sure you want to reset this guild's data from the node : " + node)
                             .setDescription("This action will return you the data erased in a JSON file so you can use the command `/setup data set` to reset to your old data.")
                             .setTimestamp();
         
@@ -130,7 +143,7 @@ export default {
                             // TODO : find confirmation interaction type for filter (       here ↓  and here ↓ )
                             const confirmation = await response.awaitMessageComponent({filter : (i : any) => i.user.id === interaction.user.id, time : 60_000});
                             if(confirmation.customId === 'confirm'){
-                                const oldData = await bot.configHandler.resetGuildData(bot, interaction.guild);
+                                const oldData = await bot.guildHandlers.get(interaction.guild)?.guildData.resetGuildData(node, bot, interaction.guild);
                                 const operationDoneEmbed = new Discord.EmbedBuilder()
                                     .setColor(0x43d927)
                                     .setTitle("Data reseted successfully")
@@ -202,8 +215,8 @@ export default {
                             if(error || !interaction.guild) {
                                 return interaction.followUp("Oops, and error occured while fetching the attached file");
                             }
-                            const data:IGuildHandlerVarArchitecture = await JSON.parse(body)[0];
-                            await bot.configHandler.modifyGuildSetup(bot, interaction.guild, async config => data);
+                            const data:IGuildHandlerVarArchitecture = await JSON.parse(body);
+                            await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async config => data);
                             await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
                         });
                     }
