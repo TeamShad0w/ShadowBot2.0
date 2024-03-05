@@ -1,5 +1,5 @@
 import { IGuildHandlerVarArchitecture, createNewGuildData } from './guildHandler';
-import print from './consoleHandler';
+import print, { simplePrint } from './consoleHandler';
 import { LogLevel } from './consoleHandler';
 import fs from 'fs';
 import path from "path";
@@ -24,22 +24,6 @@ export default class ConfigHandler {
     modify = async (bot:ClientWithCommands, guild:Discord.Guild, modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) : Promise<void> => {
         this.value = await modifingFunction(this.value);
         this.write(bot, guild);
-    }
-
-    // TODO : jsDoc
-    modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:(guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture) : Promise<void> => {
-        if(!this.value.guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
-        let index = this.value.guilds.findIndex(guild => guild.id === _guild.id);
-        this.value.guilds[index] = await builder(this.value.guilds[index]);
-        await this.write(bot, _guild);
-    }
-
-    // TODO : jsDoc
-    resetGuildData = async(bot:ClientWithCommands, _guild:Discord.Guild) : Promise<IGuildHandlerVarArchitecture> => {
-        let index = this.value.guilds.findIndex(guild => guild.id === _guild.id);
-        let oldData = this.value.guilds.splice(index, 1)[0];
-        await createNewGuildData(bot, _guild);
-        return oldData;
     }
 
     // TODO : jsDoc
