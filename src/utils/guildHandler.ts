@@ -1,4 +1,4 @@
-import { LogLevel } from './consoleHandler';
+import { LogLevel, simplePrint } from './consoleHandler';
 import Discord from 'discord.js';
 import ClientWithCommands from './clientWithCommands';
 import print from './consoleHandler';
@@ -26,6 +26,9 @@ export interface IGuildHandlerVarArchitecture {
 }
 
 // TODO : jsDoc
+export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel";
+
+// TODO : jsDoc
 export class GuildHandler {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
@@ -34,6 +37,22 @@ export class GuildHandler {
     constructor(_id:Discord.Snowflake, _logChannel:ILogChannelDataHolder = { id : "-1", logLevel : LogLevel.Info}) {
         this.id = _id;
         this.logChannel = _logChannel;
+    }
+
+    // TODO : jsDoc
+    modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:(guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture) : Promise<void> => {
+        if(!bot.configHandler.value.guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
+        let index = bot.configHandler.value.guilds.findIndex(guild => guild.id === _guild.id);
+        bot.configHandler.value.guilds[index] = await builder(bot.configHandler.value.guilds[index]);
+        await bot.configHandler.write(bot, _guild);
+    }
+
+    // TODO : jsDoc
+    resetGuildData = async(node:Node, bot:ClientWithCommands, _guild:Discord.Guild) : Promise<IGuildHandlerVarArchitecture> => {
+        let index = bot.configHandler.value.guilds.findIndex(guild => guild.id === _guild.id);
+        let oldData = bot.configHandler.value.guilds.splice(index, 1)[0];
+        await createNewGuildData(bot, _guild);
+        return oldData;
     }
 }
 
@@ -53,7 +72,7 @@ export async function createNewGuildData(bot : ClientWithCommands, guild:Discord
 
 // TODO : jsDoc
 export default async function setHandlers(bot:ClientWithCommands): Promise<string | number> {
-    let guildsData:Array<GuildHandler> = bot.configHandler.value.guilds;
+    let guildsData:Array<IGuildHandlerVarArchitecture> = bot.configHandler.value.guilds;
     bot.guilds.cache.each(guild => {
 
         if (guildsData.length === 0) {
