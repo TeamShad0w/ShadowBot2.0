@@ -46,7 +46,7 @@ export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | n
     await Promise.all(bot.guilds.cache.map(async _guild => {
         if(guild !== null && guild.id !== _guild.id) { return _guild; }
         await Promise.all((await bot.configHandler.getGuildData(_guild)).map(async guildData => {
-            if(logLevel < guildData.logChannel.logLevel) { return guildData; }
+            if(logLevel < guildData.logChannel.logLevel || guildData.logChannel.id === "-1") { return guildData; }
             const logChannel = await _guild.channels.fetch(guildData.logChannel.id)
             if(logChannel === null || !logChannel.isTextBased()) { return guildData; }
             await sendEmbeddedLog(logChannel, bot, msg, logLevel, dateTime, guild);
@@ -64,9 +64,9 @@ export async function releaseLogsFromPipe(bot:ClientWithCommands) : Promise<void
 }
 
 // TODO : jsDoc
-export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, bot:ClientWithCommands, guild:Discord.Guild | null, hold=false, timeDate:boolean=true) : Promise<void> {
+export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, bot:ClientWithCommands, guild:Discord.Guild | null, hold=false, _dateTime:boolean=true) : Promise<void> {
     let dateTime = new Date();
-    let dateTimeIndicator = timeDate ? "[" + dateTime.toLocaleString().replace(", ", " at ") + "]" : "";
+    let dateTimeIndicator = _dateTime ? "[" + dateTime.toLocaleString().replace(", ", " at ") + "]" : "";
     let formattedMsg = `${dateTimeIndicator} : ${LogLevel[logLevel].toUpperCase() === "CRITICAL" ? "CRITICAL ERROR" : LogLevel[logLevel].toUpperCase()} ==> ${msg}`;
     let logLevelString = LogLevel[logLevel].toLowerCase() as "debug" | "log" | "info" | "warn" | "error" | "critical";
     console[`${logLevelString === "critical" ? "error" : logLevelString}`](formattedMsg);
