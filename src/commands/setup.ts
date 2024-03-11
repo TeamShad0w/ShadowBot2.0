@@ -215,8 +215,15 @@ export default {
                             if(error || !interaction.guild) {
                                 return interaction.followUp("Oops, and error occured while fetching the attached file");
                             }
-                            const data:IGuildHandlerVarArchitecture = await JSON.parse(body);
-                            await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async config => data);
+                            const data = [].concat(await JSON.parse(body));
+                            if(data.length !== 1) { return interaction.followUp("Oops, it seems that the file you provided doesn't contain ONE guild data or ONE guild data property"); }
+                            const dataNode = await bot.guildHandlers.get(interaction.guild)?.guildData.isGuildDataOfGuild(data[0], interaction.guild);
+                            if(!dataNode) { await interaction.followUp("Oops, it seems that the file you provided cannot be read as guild data."); return; }
+                            await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async config => {
+                                if(dataNode === "root") { return data[0]; }
+                                // TODO  : handle other node than root
+                                return data[0];
+                            });
                             await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
                         });
                     }
