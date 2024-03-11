@@ -1,5 +1,6 @@
 /**
- * This function allows you to access and modify a nested property in an object from a string path.
+ * This function allows you to access a nested property in an object from a string path.
+ * It will then return the object with the modified property.
  * 
  * Took from : https://webtips.dev/webtips/javascript/update-nested-property-by-string
  * 
@@ -8,6 +9,7 @@
  * @param value The new value the property should get
  * @returns The object inputed but with the modified property
  */
+export async function setNestedProperty<T>(obj:T, path:string, value:any):Promise<T>
 export async function setNestedProperty(obj:any, path:string, value:any):Promise<any> {
     const [head, ...rest] = path.split('.')
 
