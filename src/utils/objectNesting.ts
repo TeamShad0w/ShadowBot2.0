@@ -20,3 +20,8 @@ export async function setNestedProperty(obj:any, path:string, value:any):Promise
             : value
     }
 }
+
+// TODO : jsDoc
+export async function getNestedProperty(obj:any, path:any):Promise<any> {
+    // TODO : write code to get nested property value
+}
