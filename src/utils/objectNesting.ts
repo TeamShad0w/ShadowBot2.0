@@ -16,7 +16,7 @@ export async function setNestedProperty(obj:any, path:string, value:any):Promise
     return {
         ...obj,
         [head]: rest.length
-            ? setNestedProperty(obj[head], rest.join('.'), value)
+            ? await setNestedProperty(obj[head], rest.join('.'), value)
             : value
     }
 }
