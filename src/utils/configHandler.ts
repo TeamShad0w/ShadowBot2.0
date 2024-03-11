@@ -21,6 +21,12 @@ export default class ConfigHandler {
     };
 
     // TODO : jsDoc
+    // TODO : put this function in the code as well as make this.value private
+    /*getValue = async () : Promise<Iconfig> => {
+        return this.value;
+    }*/
+
+    // TODO : jsDoc
     modify = async (bot:ClientWithCommands, guild:Discord.Guild, modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) : Promise<void> => {
         this.value = await modifingFunction(this.value);
         this.write(bot, guild);
