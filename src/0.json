@@ -4,12 +4,9 @@
         {
             "id" : "__ID__",
             "logChannel" : {
-                "id" : "__ID__(int)",
-                "logLevel" : "__LOG_LEVEL__"
+                "id" : "-1",
+                "logLevel" : 2
             }
-        },
-        {
-            "ECT..." : ""
         }
     ]
 }
