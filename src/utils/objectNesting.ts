@@ -11,17 +11,16 @@
  */
 export async function setNestedProperty<T>(obj:T, path:string, value:any):Promise<T>
 export async function setNestedProperty(obj:any, path:string, value:any):Promise<any> {
-    const [head, ...rest] = path.split('.')
+    const [head, ...rest] = path.split('.');
 
     return {
         ...obj,
-        [head]: rest.length
-            ? await setNestedProperty(obj[head], rest.join('.'), value)
-            : value
-    }
+        [head]: rest.length ? await setNestedProperty(obj[head], rest.join('.'), value) : value
+    };
 }
 
 // TODO : jsDoc
 export async function getNestedProperty(obj:any, path:any):Promise<any> {
-    // TODO : write code to get nested property value
+    const [head, ...rest] = path.split('.');
+    return rest.length ? await getNestedProperty(obj[head], rest.join('.')) : obj[head];
 }
