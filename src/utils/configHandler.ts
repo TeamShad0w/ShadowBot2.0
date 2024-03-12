@@ -14,17 +14,16 @@ export interface Iconfig {
 
 // TODO : jsDoc
 export default class ConfigHandler {
-    value : Iconfig;
+    private value : Iconfig;
 
     constructor(_config : Iconfig) {
         this.value = _config;
     };
 
     // TODO : jsDoc
-    // TODO : put this function in the code as well as make this.value private
-    /*getValue = async () : Promise<Iconfig> => {
+    getValue = async () : Promise<Iconfig> => {
         return this.value;
-    }*/
+    }
 
     // TODO : jsDoc
     modify = async (bot:ClientWithCommands, guild:Discord.Guild, modifingFunction:(config:Iconfig)=>Promise<Iconfig>|Iconfig) : Promise<void> => {

@@ -71,16 +71,16 @@ export class GuildHandler {
 
     // TODO : jsDoc
     modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:(guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture) : Promise<void> => {
-        if(!bot.configHandler.value.guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
-        let index = bot.configHandler.value.guilds.findIndex(guild => guild.id === _guild.id);
-        bot.configHandler.value.guilds[index] = await builder(bot.configHandler.value.guilds[index]);
+        if(!(await bot.configHandler.getValue()).guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
+        let index = (await bot.configHandler.getValue()).guilds.findIndex(guild => guild.id === _guild.id);
+        (await bot.configHandler.getValue()).guilds[index] = await builder((await bot.configHandler.getValue()).guilds[index]);
         await bot.configHandler.write(bot, _guild);
     }
 
     // TODO : jsDoc
     resetGuildData = async(node:Node, bot:ClientWithCommands, _guild:Discord.Guild) : Promise<IGuildHandlerVarArchitecture> => {
-        let index = bot.configHandler.value.guilds.findIndex(guild => guild.id === _guild.id);
-        let oldData = bot.configHandler.value.guilds[index];
+        let index = (await bot.configHandler.getValue()).guilds.findIndex(guild => guild.id === _guild.id);
+        let oldData = (await bot.configHandler.getValue()).guilds[index];
         if(node === "root") { 
             await bot.configHandler.modify(bot, _guild, (config:Iconfig) => {
                 config.guilds.splice(index, 1);
@@ -121,7 +121,7 @@ export async function createNewGuildData(bot : ClientWithCommands, guild:Discord
 
 // TODO : jsDoc
 export default async function setHandlers(bot:ClientWithCommands): Promise<string | number> {
-    let guildsData:Array<IGuildHandlerVarArchitecture> = bot.configHandler.value.guilds;
+    let guildsData:Array<IGuildHandlerVarArchitecture> = (await bot.configHandler.getValue()).guilds;
     bot.guilds.cache.each(guild => {
 
         if (guildsData.length === 0) {
