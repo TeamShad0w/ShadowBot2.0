@@ -1,4 +1,4 @@
-import Discord, { ActionRowBuilder, DiscordAPIError, messageLink, Options } from 'discord.js';
+import Discord, { ActionRowBuilder, DiscordAPIError, messageLink, Options, PresenceUpdateStatus } from 'discord.js';
 import { LogLevel, simplePrint } from '../utils/consoleHandler';
 import ClientWithCommands from '../utils/clientWithCommands';
 import setHandlers, { IGuildHandlerVarArchitecture, Node } from '../utils/guildHandler';
@@ -9,6 +9,7 @@ import request from 'request';
 import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream/promises';
+import { setNestedProperty } from '../utils/objectNesting';
 
 export default {
     name : "setup",
@@ -215,14 +216,27 @@ export default {
                             if(error || !interaction.guild) {
                                 return interaction.followUp("Oops, and error occured while fetching the attached file");
                             }
-                            const data = [].concat(await JSON.parse(body));
+                            let data:any[] = []
+                            try{
+                                data = data.concat(await JSON.parse(body));
+                            }catch(err){
+                                await interaction.followUp("Oops, an error occured while fetching the data from the file.\r\nContact your administrator for more information.");
+                                await print("An error occured while parsing the file's content to a data array.", LogLevel.Error, bot, interaction.guild);
+                                return;
+                            }
                             if(data.length !== 1) { return interaction.followUp("Oops, it seems that the file you provided doesn't contain ONE guild data or ONE guild data property"); }
-                            const dataNode = await bot.guildHandlers.get(interaction.guild)?.guildData.isGuildDataOfGuild(data[0], interaction.guild);
-                            if(!dataNode) { await interaction.followUp("Oops, it seems that the file you provided cannot be read as guild data."); return; }
+                            const buff = await bot.guildHandlers.get(interaction.guild)?.guildData.isGuildDataOfGuild(data[0], interaction.guild) ?? [undefined, data];
+                            const fData = buff[1];
+                            const dataNode = buff[0];
+                            if(!dataNode) { 
+                                await interaction.followUp("Oops, it seems that the file you provided cannot be read as guild data.");
+                                await print("The provided file is not readable as guild data. Here is the extracted data :\r\n```json\r\n" + JSON.stringify(fData, undefined, 4) + "```", LogLevel.Error, bot, interaction.guild);
+                                return;
+                            }
+                            console.log(fData)
                             await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async config => {
-                                if(dataNode === "root") { return data[0]; }
-                                // TODO  : handle other node than root
-                                return data[0];
+                                if(dataNode === "root") { return fData; }
+                                return await setNestedProperty(config, dataNode, fData);
                             });
                             await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
                         });

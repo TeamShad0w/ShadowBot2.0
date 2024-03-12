@@ -96,12 +96,19 @@ export class GuildHandler {
         return oldData;
     }
 
-    isGuildDataOfGuild = async(data:any, guild:Discord.Guild) : Promise<Node | undefined> => {
-        if(!data) { return undefined };
-        if(await isIGuildHandlerVarArchitectureOfGuild(data, guild)) { return "root"; }
-        if(await isILogChannelDataHolderOfGuild(data, guild)) { return "logChannel"; }
-        if(data in LogLevel) { return "logChannel.logLevel"; }
-        if((await guild.channels.fetch(data)) !== null) { return "logChannel.id"; }
+    isGuildDataOfGuild = async(data:any, guild:Discord.Guild) : Promise<[Node | undefined, any]> => {
+        if(!data) { return [undefined, data] };
+        if(await isIGuildHandlerVarArchitectureOfGuild(data, guild)) { return ["root", data]; }
+        if(await isILogChannelDataHolderOfGuild(data, guild)) { return ["logChannel", data]; }
+        if(data in LogLevel) { return ["logChannel.logLevel", data]; }
+        try {
+            if((await guild.channels.fetch(data)) !== null) { return ["logChannel.id", data]; }
+        }catch (err) {}
+        let keys = Object.keys(data);
+        if(keys.length === 1) {
+            return this.isGuildDataOfGuild(data[keys[0]], guild);
+        }
+        return [undefined, data];
     }
 }
 
