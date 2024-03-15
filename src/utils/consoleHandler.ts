@@ -46,6 +46,7 @@ export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | n
     await Promise.all(bot.guilds.cache.map(async _guild => {
         if(guild !== null && guild.id !== _guild.id) { return _guild; }
         await Promise.all((await bot.configHandler.getGuildData(_guild)).map(async guildData => {
+            if(!guildData.logChannel) { return guildData; }
             if(logLevel < guildData.logChannel.logLevel || guildData.logChannel.id === "-1") { return guildData; }
             if(!_guild.channels.cache.get(guildData.logChannel.id)) { return guildData; }
             const logChannel = await _guild.channels.fetch(guildData.logChannel.id)

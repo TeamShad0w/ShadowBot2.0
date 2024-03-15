@@ -43,6 +43,7 @@ export default {
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
+                            if(!guildData.logChannel) { return guildData; }
                             guildData.logChannel.id = interaction.options.getChannel("log_channel")?.id ?? "-1";
                             return guildData;
                         });
@@ -78,6 +79,7 @@ export default {
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
+                            if(!guildData.logChannel) { return guildData; }
                             guildData.logChannel.logLevel = interaction.options.getInteger("log_level") ?? LogLevel.Info;
                             return guildData;
                         });
