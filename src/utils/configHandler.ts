@@ -15,14 +15,21 @@ export interface Iconfig {
 // TODO : jsDoc
 export default class ConfigHandler {
     private value : Iconfig;
+    private default : Iconfig;
 
-    constructor(_config : Iconfig) {
+    constructor(_config : Iconfig, _default : Iconfig) {
         this.value = _config;
+        this.default = _default;
     };
 
     // TODO : jsDoc
     getValue = async () : Promise<Iconfig> => {
         return this.value;
+    }
+
+    // TODO : jsDoc
+    getDefault = async () : Promise<Iconfig> => {
+        return this.default;
     }
 
     // TODO : jsDoc

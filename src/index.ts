@@ -1,6 +1,7 @@
 //imports
 import Discord from 'discord.js';
 import Config from './config.json';
+import Default from './0.json';
 import loadCommands from './loaders/loadCommands';
 import loadDatabase from './loaders/loadDatabase';
 import loadEvents from './loaders/loadEvents';
@@ -33,7 +34,7 @@ async function main():Promise<void> {
     /**
      * The bot Client
      */
-    let bot = new ClientWithCommands(Config, { intents: [3276799] });
+    let bot = new ClientWithCommands(Config, Default, { intents: [3276799] });
 
     print("starting bot...", LogLevel.Log, bot, null, true);
 

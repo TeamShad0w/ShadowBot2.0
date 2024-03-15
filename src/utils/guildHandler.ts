@@ -6,7 +6,7 @@ import config from '../config.json';
 import { tryFunction } from './tryFunction';
 import fs from 'fs';
 import { Iconfig } from './configHandler';
-import { setNestedProperty } from './objectNesting';
+import { setNestedProperty, getNestedProperty } from './objectNesting';
 
 // TODO : jsDoc
 export interface ILogChannelDataHolder {
@@ -18,7 +18,7 @@ export async function isILogChannelDataHolderOfGuild(_object:unknown, guild:Disc
     if(!_object) { return false; }
     let _objectTyped = _object as ILogChannelDataHolder;
     return _objectTyped.id !== undefined
-        && (await guild.channels.fetch(_objectTyped.id)) !== null
+        && (guild.channels.cache.get(_objectTyped.id)) !== undefined
         && _objectTyped.logLevel !== undefined
         && _objectTyped.logLevel in LogLevel;
 }
@@ -32,7 +32,7 @@ export interface IGlobalGuildContainer {
 // TODO : jsDoc
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
-    logChannel : ILogChannelDataHolder;
+    logChannel : ILogChannelDataHolder | undefined;
 }
 
 export async function isIGuildHandlerVarArchitectureOfGuild(_object:unknown, guild:Discord.Guild) : Promise<boolean> {
@@ -47,26 +47,28 @@ export async function isIGuildHandlerVarArchitectureOfGuild(_object:unknown, gui
 export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel";
 
 // TODO : jsDoc
-// TODO : automate this from 0.json ?
-export function getInitialValueOfNode(node:Node) : any {
-    switch (node) {
-        case "root" : throw new Error("Root node don't have initial value without a guild attached.\r\nTo get a new GuildConfig, please use the constructor of the class GuildConfig.");
-        case "logChannel" : return { id : "-1", logLevel : LogLevel.Info};
-        case "logChannel.id" : return "-1";
-        case "logChannel.logLevel" : return LogLevel.Info;
-        default : throw new Error("Challenge completed : How did we get there ?\r\nA wrong value has been used for getInitialValueOfNode as TypeScript didn't say a word >:(\r\nBad TypeScript !");
-    }
-}
-
-// TODO : jsDoc
 export class GuildHandler {
     id : Discord.Snowflake;
-    logChannel : ILogChannelDataHolder;
+    logChannel : ILogChannelDataHolder | undefined;
 
     // TODO : jsDoc
-    constructor(_id:Discord.Snowflake, _logChannel:ILogChannelDataHolder = getInitialValueOfNode("logChannel")) {
+    constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined) {
         this.id = _id;
-        this.logChannel = _logChannel;
+        if(!_logChannel) {
+            bot.configHandler.getDefault().then(defaultConfig => {
+                getNestedProperty(defaultConfig, "guilds.0.logChannel").then(defaultValue => {
+                    this.logChannel = defaultValue;
+                    bot.guilds.fetch(this.id).then(guild => {
+                        this.modifyGuildSetup(bot, guild, guildData => {
+                            guildData.logChannel = this.logChannel;
+                            return guildData;
+                        });
+                    });
+                });
+            });
+        }else{
+            this.logChannel = _logChannel;
+        }
     }
 
     // TODO : jsDoc
@@ -89,7 +91,7 @@ export class GuildHandler {
             await createNewGuildData(bot, _guild);
         }else {
             await bot.configHandler.modify(bot, _guild, async (config:Iconfig) => {
-                config.guilds[index] = await setNestedProperty<IGuildHandlerVarArchitecture>(config.guilds[index], node, getInitialValueOfNode(node));
+                config.guilds[index] = await setNestedProperty<IGuildHandlerVarArchitecture>(config.guilds[index], node, getNestedProperty(bot.configHandler.getValue(), "guilds.0." + node));
                 return config;
             });
         }
@@ -114,7 +116,7 @@ export class GuildHandler {
 
 // TODO : jsDoc
 export async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
-    let guildData:GuildHandler = new GuildHandler(guild.id);
+    let guildData:GuildHandler = new GuildHandler(bot, guild.id);
     bot.guildHandlers.set(guild, {
         guildData : guildData,
         id : guild.id
@@ -141,7 +143,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
                 return true;
             }
             bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(guild.id, guildData.logChannel),
+                guildData : new GuildHandler(bot, guild.id, guildData.logChannel),
                 id : guild.id
             });
             return false;
