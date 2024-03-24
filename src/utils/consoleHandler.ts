@@ -76,6 +76,11 @@ export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, b
     bot.logPipe.push([msg.toString(), logLevel, dateTime, guild]);
 }
 
+/**
+ * Old version of the actual print function, display anything as proper log into console.
+ * @param {any} msg The message to display.
+ * @param {LogLevel} logLevel The type of the message (Default value : Debug).
+ */
 export async function simplePrint(msg:any, logLevel:LogLevel=LogLevel.Debug){
     let dateTime = new Date();
     let dateTimeIndicator = "[" + dateTime.toLocaleString().replace(", ", " at ") + "]";
