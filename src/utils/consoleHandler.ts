@@ -1,7 +1,9 @@
 import Discord from "discord.js";
 import ClientWithCommands from "./clientWithCommands";
 
-// TODO : jsDoc
+/*
+ * The different types of displayed logs.
+ */
 export enum LogLevel {
     Debug,
     Log,
