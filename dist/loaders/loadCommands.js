@@ -8,7 +8,6 @@ const path_1 = tslib_1.__importDefault(require("path"));
 exports.default = async (bot) => {
     let err = "";
     let Way = path_1.default.dirname(path_1.default.dirname(__filename));
-    (0, consoleHandler_1.default)(Way, consoleHandler_2.LogLevel.Debug);
     fs_1.default.readdirSync(`${Way}/commands`).filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async (file) => {
         let command = require(`${Way}/commands/${file}`).default;
         if (!command.name || typeof command.name !== "string") {
@@ -16,7 +15,7 @@ exports.default = async (bot) => {
             return false;
         }
         bot.commands.set(command.name, command);
-        (0, consoleHandler_1.default)(`commandload : ${file} loaded.`, consoleHandler_2.LogLevel.Log);
+        (0, consoleHandler_1.default)(`commandload : ${file} loaded.`, consoleHandler_2.LogLevel.Log, bot, null, true);
     });
     if (err === "") {
         return 1;

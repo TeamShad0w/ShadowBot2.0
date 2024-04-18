@@ -1,0 +1,12 @@
+{
+    "token": "__TOKEN__",
+    "guilds": [
+        {
+            "id": "__ID__",
+            "logChannel": {
+                "id": "-1",
+                "logLevel": 2
+            }
+        }
+    ]
+}

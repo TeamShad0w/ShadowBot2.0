@@ -16,7 +16,7 @@ exports.default = async (bot) => {
             return false;
         }
         bot.on(file.slice(0, -3), (...args) => event.listener(bot, ...args));
-        (0, consoleHandler_1.default)(`EVENTLOAD : ${file} loaded.`, consoleHandler_2.LogLevel.Info);
+        (0, consoleHandler_1.default)(`EVENTLOAD : ${file} loaded.`, consoleHandler_2.LogLevel.Info, bot, null, true);
     });
     if (err === "") {
         return 1;

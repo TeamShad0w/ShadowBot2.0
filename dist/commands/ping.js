@@ -6,6 +6,6 @@ exports.default = {
     permission: null,
     dm: true,
     async run(bot, interaction) {
-        await interaction.reply("pong");
+        await interaction.followUp("pong");
     }
 };

@@ -17,7 +17,7 @@ exports.default = {
                 let command = await require(`${Way}/commands/${file}`).default;
                 fmsg += `\r\n> **${command.name}** : *${command.description}*`;
                 if (index === array.length - 1) {
-                    interaction.reply(fmsg);
+                    interaction.followUp(fmsg);
                 }
             });
         });

@@ -3,77 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const discord_js_1 = tslib_1.__importDefault(require("discord.js"));
 const consoleHandler_1 = require("../utils/consoleHandler");
+const guildHandler_1 = require("../utils/guildHandler");
 const consoleHandler_2 = tslib_1.__importDefault(require("../utils/consoleHandler"));
 const request_1 = tslib_1.__importDefault(require("request"));
+const objectNesting_1 = require("../utils/objectNesting");
 exports.default = {
     name: "setup",
     description: "changes settings for how the bot should behave on your discord server",
     permission: discord_js_1.default.PermissionFlagsBits.ManageGuild,
     dm: false,
     options: [
-        {
-            name: "database",
-            description: "all the settings for the database",
-            type: "SubcommandGroup",
-            options: [
-                {
-                    name: "url",
-                    description: "change the url to connect to the server holding the database",
-                    type: "Subcommand",
-                    options: [
-                        {
-                            name: "url",
-                            description: "the url of the server holding the database",
-                            type: "String",
-                            required: true
-                        },
-                        {
-                            name: "return_data",
-                            description: "wether or not to return the new data",
-                            type: "Boolean"
-                        }
-                    ],
-                    async run(bot, interaction) {
-                        if (!interaction.guild) {
-                            return;
-                        }
-                        bot.configHandler.modifyGuildSetup(bot, interaction.guild, guildData => {
-                            guildData.database.url = interaction.options.getString("url") ?? "-1";
-                            return guildData;
-                        });
-                        await interaction.followUp("This server setup has been changed.");
-                    }
-                },
-                {
-                    name: "api_key",
-                    description: "change the api key to connect to the server holding the database",
-                    type: "Subcommand",
-                    options: [
-                        {
-                            name: "api_key",
-                            description: "the api_key to identify the bot to the server",
-                            type: "String",
-                            required: true
-                        },
-                        {
-                            name: "return_data",
-                            description: "wether or not to return the new data",
-                            type: "Boolean"
-                        }
-                    ],
-                    async run(bot, interaction) {
-                        if (!interaction.guild) {
-                            return;
-                        }
-                        bot.configHandler.modifyGuildSetup(bot, interaction.guild, guildData => {
-                            guildData.database.APIKey = interaction.options.getString("api_key") ?? "-1";
-                            return guildData;
-                        });
-                        await interaction.followUp("This server setup has been changed.");
-                    }
-                }
-            ]
-        },
         {
             name: "logs",
             description: "all the settings for the displayed logs",
@@ -100,7 +39,7 @@ exports.default = {
                         if (!interaction.guild) {
                             return;
                         }
-                        bot.configHandler.modifyGuildSetup(bot, interaction.guild, guildData => {
+                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
                             guildData.logChannel.id = interaction.options.getChannel("log_channel")?.id ?? "-1";
                             return guildData;
                         });
@@ -121,7 +60,7 @@ exports.default = {
                                 { name: "Debug", value: consoleHandler_1.LogLevel.Debug },
                                 { name: "Log", value: consoleHandler_1.LogLevel.Log },
                                 { name: "Info", value: consoleHandler_1.LogLevel.Info },
-                                { name: "Warning", value: consoleHandler_1.LogLevel.Warning },
+                                { name: "Warning", value: consoleHandler_1.LogLevel.Warn },
                                 { name: "Error", value: consoleHandler_1.LogLevel.Error },
                                 { name: "Critical", value: consoleHandler_1.LogLevel.Critical }
                             ]
@@ -136,7 +75,7 @@ exports.default = {
                         if (!interaction.guild) {
                             return;
                         }
-                        await bot.configHandler.modifyGuildSetup(bot, interaction.guild, async (guildData) => {
+                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async (guildData) => {
                             guildData.logChannel.logLevel = interaction.options.getInteger("log_level") ?? consoleHandler_1.LogLevel.Info;
                             return guildData;
                         });
@@ -154,13 +93,26 @@ exports.default = {
                     name: "reset",
                     description: "resets the guild data",
                     type: "Subcommand",
+                    options: [
+                        {
+                            name: "node",
+                            description: "the parameter of parameter group to reset",
+                            type: "String",
+                            choices: [
+                                { name: "root.logChannel", value: "logChannel" },
+                                { name: "root.logChannel.id", value: "logChannel.id" },
+                                { name: "root.logChannel.logLevel", value: "logChannel.logLevel" }
+                            ]
+                        }
+                    ],
                     async run(bot, interaction) {
                         if (!interaction.guild) {
                             return;
                         }
+                        const node = (interaction.options.getString("node") ?? "root");
                         const embed = new discord_js_1.default.EmbedBuilder()
                             .setColor(0x26c7d9)
-                            .setTitle("Are you sure you want to reset this guild's data ?")
+                            .setTitle("Are you sure you want to reset this guild's data from the node : " + node)
                             .setDescription("This action will return you the data erased in a JSON file so you can use the command `/setup data set` to reset to your old data.")
                             .setTimestamp();
                         const confirm = new discord_js_1.default.ButtonBuilder()
@@ -184,7 +136,7 @@ exports.default = {
                         try {
                             const confirmation = await response.awaitMessageComponent({ filter: (i) => i.user.id === interaction.user.id, time: 60_000 });
                             if (confirmation.customId === 'confirm') {
-                                const oldData = await bot.configHandler.resetGuildData(bot, interaction.guild);
+                                const oldData = await bot.guildHandlers.get(interaction.guild)?.guildData.resetGuildData(node, bot, interaction.guild);
                                 const operationDoneEmbed = new discord_js_1.default.EmbedBuilder()
                                     .setColor(0x43d927)
                                     .setTitle("Data reseted successfully")
@@ -202,7 +154,7 @@ exports.default = {
                             }
                         }
                         catch (err) {
-                            (0, consoleHandler_2.default)(err, consoleHandler_1.LogLevel.Error);
+                            (0, consoleHandler_2.default)(err, consoleHandler_1.LogLevel.Error, bot, interaction.guild);
                             validationNotReceivedEmbed.setDescription("Confirmation not received within 60seconds.");
                             await response.edit({ embeds: [validationNotReceivedEmbed], components: [] });
                         }
@@ -254,9 +206,69 @@ exports.default = {
                             if (error || !interaction.guild) {
                                 return interaction.followUp("Oops, and error occured while fetching the attached file");
                             }
-                            const data = await JSON.parse(body)[0];
-                            await bot.configHandler.modifyGuildSetup(bot, interaction.guild, async (config) => data);
-                            await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
+                            let data = [];
+                            try {
+                                data = data.concat(await JSON.parse(body));
+                            }
+                            catch (err) {
+                                await interaction.followUp("Oops, an error occured while fetching the data from the file.\r\nContact your administrator for more information.");
+                                await (0, consoleHandler_2.default)("An error occured while parsing the file's content to a data array.", consoleHandler_1.LogLevel.Error, bot, interaction.guild);
+                                return;
+                            }
+                            const results = await (0, guildHandler_1.guildDataScanner)(bot, data);
+                            await interaction.followUp({
+                                content: "",
+                                embeds: await Promise.all(results.map(async (result) => {
+                                    if (!interaction.guild) {
+                                        return new discord_js_1.default.EmbedBuilder()
+                                            .setColor(0xFF0000)
+                                            .setTitle("Critical Failure")
+                                            .setDescription("An error occured while constructing the action report : unable to find the guild the interaction was sent from.")
+                                            .addFields([
+                                            {
+                                                name: "Data :",
+                                                value: "```json\r\n" + JSON.stringify(result[1], undefined, 4) + "```"
+                                            },
+                                            {
+                                                name: "Response",
+                                                value: "Ommited data"
+                                            }
+                                        ]);
+                                    }
+                                    let good = false;
+                                    if (result[0]) {
+                                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async (guildData) => {
+                                            return result[0] ? (0, objectNesting_1.setNestedProperty)(guildData, result[0], result[1]) : guildData;
+                                        });
+                                    }
+                                    await interaction.followUp("This server setup has been changed.");
+                                    return new discord_js_1.default.EmbedBuilder()
+                                        .setColor(result[0]
+                                        ? 0x00FF00
+                                        : 0xd6520d)
+                                        .setTitle(result[0]
+                                        ? "Success :"
+                                        : "Error :")
+                                        .setDescription(result[0]
+                                        ? "The following data was successfully set."
+                                        : "The following data was omitted for : `" + result[2] + "`")
+                                        .addFields([
+                                        {
+                                            name: "Data :",
+                                            value: "```json\r\n" + JSON.stringify(result[1], undefined, 4) + "```"
+                                        },
+                                        {
+                                            name: "Response :",
+                                            value: result[0] && !result[2]
+                                                ? "Tried to modify data"
+                                                : result[2] ?? "No error message was thrown."
+                                        }
+                                    ]);
+                                }))
+                            });
+                            if (results.every(result => result[0] !== undefined)) {
+                                await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
+                            }
                         });
                     }
                 }
