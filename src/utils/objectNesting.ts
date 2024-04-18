@@ -20,7 +20,7 @@ export async function setNestedProperty(obj:any, path:string, value:any):Promise
 }
 
 // TODO : jsDoc
-export async function getNestedProperty(obj:any, path:any):Promise<any> {
+export async function getNestedProperty(obj:any, path:string):Promise<any> {
     const [head, ...rest] = path.split('.');
     return rest.length ? await getNestedProperty(obj[head], rest.join('.')) : obj[head];
 }
