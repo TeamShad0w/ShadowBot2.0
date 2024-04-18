@@ -16,10 +16,7 @@ import path from "path";
 export default async (bot:ClientWithCommands):Promise<number|string> => {
 
     let err:string = "";
-
     let Way:string = path.dirname(path.dirname(__filename));
-
-    print(Way, LogLevel.Debug);
 
     fs.readdirSync(`${Way}/commands`).filter(f => f.endsWith("js") || f.endsWith("ts")).forEach(async file => {
 
@@ -31,7 +28,7 @@ export default async (bot:ClientWithCommands):Promise<number|string> => {
         }
 
         bot.commands.set(command.name, command);
-        print(`commandload : ${file} loaded.`, LogLevel.Log);
+        print(`commandload : ${file} loaded.`, LogLevel.Log, bot, null, true);
     });
 
     if (err === "") { return 1; }

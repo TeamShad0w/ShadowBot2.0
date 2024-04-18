@@ -3,17 +3,10 @@
     "guilds" : [
         {
             "id" : "__ID__",
-            "database" : {
-                "url" : "__URL__",
-                "APIKey" : "__APIKEY__"
-            },
             "logChannel" : {
-                "ID" : "__ID__(int)",
-                "logLevel" : "__LOG_LEVEL__"
+                "id" : "-1",
+                "logLevel" : 2
             }
-        },
-        {
-            "ECT..." : ""
         }
     ]
 }

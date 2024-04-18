@@ -28,7 +28,7 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
             return false;
         }
         bot.on(file.slice(0,-3), (...args:any[]) => event.listener(bot, ...args));
-        print(`EVENTLOAD : ${file} loaded.`, LogLevel.Info);
+        print(`EVENTLOAD : ${file} loaded.`, LogLevel.Info, bot, null, true);
     });
 
     if (err === "") { return 1; }

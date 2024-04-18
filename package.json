@@ -4,12 +4,13 @@
   "description": "The upgraded version of the ShadowBot",
   "main": "dist/index.js",
   "scripts": {
-    "getDependencies" : "yarn install",
+    "getDependencies": "yarn install",
     "testJs": "node test/test.js",
     "testTs": "ts-node test/test.ts",
-    "build": "yarn getDependencies && tsc -p .",
+    "build": "yarn getDependencies && yarn check && tsc -p .",
     "tsStart": "yarn getDependencies && ts-node src/index.ts",
-    "jsStart": "yarn getDependencies && node dist/index.js"
+    "jsStart": "yarn getDependencies && node dist/index.js",
+    "checkCode": "tsc --noEmit --skipLibCheck"
   },
   "repository": {
     "type": "git",

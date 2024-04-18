@@ -3,6 +3,7 @@
 The upgraded version of the ShadowBot
 
  just to be clear, this is a French bot and if we speak in English, that's because you know just one language. So, here is the little brother of ShadowBot, born alone in the dark place of a little French server that you will never know... (his name is Shadow, don't you dare ask why). But, by seeing his big bro, abandoned, weak and mocked, he swears "I WILL BE THE KING OF THE DISCORD BOT!" (I hope you get it) and starts his hard way, but with rage, to be harder, better, faster, stronger."
+
 ## License
 
 [CC-BY-NC-SA-4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -12,26 +13,36 @@ The upgraded version of the ShadowBot
 
 ## Installation
 
-> [!NOTE]
-> You will not find the package in npm for now, we plan on uploading it later on his developpement. You can however use git to install it.
-
 You can download the source code or clone this repository with `git clone https://github.com/C0dex73/ShadowBot2.0/`
-
 Use yarn to build the ts scripts into js ones.
 
-### Setup and use Yarn
+### Setup Yarn
 
 ```bash
   npm i -g yarn
 ```
-
 
 check if yarn is installed
 ```bash
   yarn -v
 ```
 
-install dependencies
+### Setup ShadowBot2.0
+
+Go to your project directory
+
+```bash
+  cd /path/to/my/project
+```
+
+Clone the repository
+
+```bash
+  git clone https://github.com/C0dex73/ShadowBot2.0/
+```
+
+Install dependencies
+
 ```bash
   yarn install
 ```
@@ -39,50 +50,25 @@ install dependencies
 rename src/default_config.json to src/config.json
 replace values inside the config.json file with yours (token, database url / API key, etc...).
 
+### Start the bot
+
 use build to build the src folder into the dist one
 ```bash
   yarn build
 ```
 
-you can now run the ts or js code :
+you can now run the ts or js code respectively :
 ```bash
   yarn run tsStart
 ```
-or
+and
 ```bash
   yarn run jsStart
 ```
 
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/C0dex73/ShadowBot2.0/
-```
-
-Go to the project directory
-
-```bash
-  cd my-project
-```
-
-Install dependencies
-
-```bash
-  npm install
-```
-
-Start the server
-
-```bash
-  npm run jsStart
-```
-
-
 ## Feedback
 
-If you have any feedback, please open an issue or contact us on discord : shaden2919 or 001001001_6581
+If you have any feedback, please open an issue or contact us on [discord](https://dc.gg/shadow)
 
 
 ## Who are we ?
@@ -90,11 +76,13 @@ If you have any feedback, please open an issue or contact us on discord : shaden
 - [@CODEX](https://www.github.com/C0dex73)
 - [@Shaden](https://www.github.com/Shaden919)
 
-26/02/2024 (for you this is 02/26/2024) : We are two highschool student, we can say that one had grown with code and the other had just discover this world 2 years ago
-(i let you find who is who), we live in france and here it is the presentation for each of us (so just two presentation) :
+26/02/2024 (for you this is 02/26/2024) : We are two highschool students, we can say that one had grown up with code and the other has just discover this world 2 years ago
+(i let you find who is who), we live in france.
 
   CODEX: 
-
+    Likes space, coding, gaming, math and physics.
+    Full time nerd.
+    French.
 
   Shaden : hi, my NickName is Shaden and you d'ont want to know whats his story, i'm french and here it is my hobbys :
 
@@ -105,7 +93,3 @@ If you have any feedback, please open an issue or contact us on discord : shaden
     |     3|     Coding     |
     |     4|     Eating     |
     |     3|    Sleeping    |
-
-
-
-<!-- TODO : add CODEX description -->
