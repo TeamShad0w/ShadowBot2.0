@@ -6,13 +6,13 @@ async function findSubcommand(root, name, bot, interaction) {
     }
     await Promise.all(root.options.map(async (option) => {
         if (option.type !== 'Subcommand') {
-            return;
+            return option;
         }
         if (!option.run) {
             throw new Error(`Subcommand ${option.name} have no run function.\r\n`);
         }
         if (option.name !== name) {
-            return;
+            return option;
         }
         await option.run(bot, interaction);
     }));

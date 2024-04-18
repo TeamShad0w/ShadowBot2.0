@@ -7,11 +7,12 @@ class ClientWithCommands extends discord_js_1.default.Client {
     commands;
     guildHandlers;
     configHandler;
-    constructor(Config, options) {
+    logPipe = [];
+    constructor(_config, _default, options) {
         super(options);
         this.commands = new discord_js_1.default.Collection();
         this.guildHandlers = new discord_js_1.default.Collection();
-        this.configHandler = new configHandler_1.default(Config);
+        this.configHandler = new configHandler_1.default(_config, _default);
     }
 }
 exports.default = ClientWithCommands;

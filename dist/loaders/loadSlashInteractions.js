@@ -15,7 +15,7 @@ function simpleCommandSetup(slashCommand, _option) {
         return option;
     });
 }
-function completeCommandSetup(err, _command, constructor) {
+function completeCommandSetup(bot, err, _command, constructor) {
     constructor.setName(_command[0].name)
         .setDescription(_command[0].description);
     if (constructor instanceof discord_js_1.default.SlashCommandBuilder && _command[1] === "command") {
@@ -44,7 +44,7 @@ function completeCommandSetup(err, _command, constructor) {
                             break;
                         }
                         constructor.addSubcommand(builder => {
-                            let bufferTuple = completeCommandSetup(err, [_option, "option"], builder);
+                            let bufferTuple = completeCommandSetup(bot, err, [_option, "option"], builder);
                             err += bufferTuple[0];
                             if (bufferTuple[1] instanceof discord_js_1.default.SlashCommandSubcommandBuilder) {
                                 return bufferTuple[1];
@@ -64,7 +64,7 @@ function completeCommandSetup(err, _command, constructor) {
                             break;
                         }
                         constructor.addSubcommandGroup(builder => {
-                            let bufferTuple = completeCommandSetup(err, [_option, "option"], builder);
+                            let bufferTuple = completeCommandSetup(bot, err, [_option, "option"], builder);
                             err += bufferTuple[0];
                             if (bufferTuple[1] instanceof discord_js_1.default.SlashCommandSubcommandGroupBuilder) {
                                 return bufferTuple[1];
@@ -85,7 +85,7 @@ function completeCommandSetup(err, _command, constructor) {
         });
     }
     if (constructor instanceof discord_js_1.default.SlashCommandBuilder) {
-        (0, consoleHandler_1.default)("Slash interaction : " + command.name + " is loaded.", consoleHandler_2.LogLevel.Log);
+        (0, consoleHandler_1.default)("Slash interaction : " + command.name + " is loaded.", consoleHandler_2.LogLevel.Log, bot, null, true);
     }
     return [err, constructor];
 }
@@ -96,7 +96,7 @@ exports.default = async (bot) => {
     }
     let commands = [];
     bot.commands.forEach((command) => {
-        let bufferTuple = completeCommandSetup(err, [command, "command"], new discord_js_1.default.SlashCommandBuilder());
+        let bufferTuple = completeCommandSetup(bot, err, [command, "command"], new discord_js_1.default.SlashCommandBuilder());
         err += bufferTuple[0];
         if (bufferTuple[1] instanceof discord_js_1.default.SlashCommandBuilder) {
             return commands.push(bufferTuple[1]);
