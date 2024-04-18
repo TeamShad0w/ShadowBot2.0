@@ -14,15 +14,6 @@ export interface ILogChannelDataHolder {
     logLevel : LogLevel;
 }
 
-export async function isILogChannelDataHolderOfGuild(_object:unknown, guild:Discord.Guild) : Promise<boolean> {
-    if(!_object) { return false; }
-    let _objectTyped = _object as ILogChannelDataHolder;
-    return _objectTyped.id !== undefined
-        && (guild.channels.cache.get(_objectTyped.id)) !== undefined
-        && _objectTyped.logLevel !== undefined
-        && _objectTyped.logLevel in LogLevel;
-}
-
 // TODO : jsDoc
 export interface IGlobalGuildContainer {
     guildData : GuildHandler;
@@ -32,29 +23,34 @@ export interface IGlobalGuildContainer {
 // TODO : jsDoc
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
-    logChannel : ILogChannelDataHolder | undefined;
-}
-
-export async function isIGuildHandlerVarArchitectureOfGuild(_object:unknown, guild:Discord.Guild) : Promise<boolean> {
-    if(!_object) { return false; }
-    let _objectTyped = _object as IGuildHandlerVarArchitecture;
-    return _objectTyped.id !== undefined
-        && _objectTyped.id === guild.id
-        && await isILogChannelDataHolderOfGuild(_objectTyped.logChannel, guild);
+    logChannel : ILogChannelDataHolder;
 }
 
 // TODO : jsDoc
 export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel";
+export function isNode(node:string) : node is Node {
+    // TODO : find a better way to do this ?
+    return node === "root" || node === "logChannel" || node === "logChannel.id" || node === "logChannel.logLevel";
+}
+
+export async function isValidProperty(bot:ClientWithCommands, node:string, value:any) : Promise<boolean> {
+    if(!isNode(node)) { return false; }
+    if(node === "logChannel.logLevel") { return value.toString() in Object.keys(LogLevel).filter(k => !Number.isNaN(Number.parseInt(k))); }
+    let Tdefault = typeof await getNestedProperty((await bot.configHandler.getDefault()).guilds[0], node);
+    return typeof value === typeof Tdefault;
+}
 
 // TODO : jsDoc
 export class GuildHandler {
     id : Discord.Snowflake;
-    logChannel : ILogChannelDataHolder | undefined;
+    logChannel : ILogChannelDataHolder;
 
     // TODO : jsDoc
     constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined) {
         this.id = _id;
         if(!_logChannel) {
+            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on.
+            this.logChannel = { id: "-1", logLevel:2 };
             bot.configHandler.getDefault().then(defaultConfig => {
                 getNestedProperty(defaultConfig, "guilds.0.logChannel").then(defaultValue => {
                     this.logChannel = defaultValue;
@@ -97,21 +93,40 @@ export class GuildHandler {
         }
         return oldData;
     }
+}
 
-    isGuildDataOfGuild = async(data:any, guild:Discord.Guild) : Promise<[Node | undefined, any]> => {
-        if(!data) { return [undefined, data] };
-        if(await isIGuildHandlerVarArchitectureOfGuild(data, guild)) { return ["root", data]; }
-        if(await isILogChannelDataHolderOfGuild(data, guild)) { return ["logChannel", data]; }
-        if(data in LogLevel) { return ["logChannel.logLevel", data]; }
-        try {
-            if((await guild.channels.fetch(data)) !== null) { return ["logChannel.id", data]; }
-        }catch (err) {}
-        let keys = Object.keys(data);
-        if(keys.length === 1) {
-            return this.isGuildDataOfGuild(data[keys[0]], guild);
-        }
-        return [undefined, data];
+// TODO : handle min max options in 0.json ? Because for now /setup data set with logLevel:42 modify the logLevel to 42 which shouldn't be possible
+/**
+ * Scans the given data and returns a list of nodes associated with their value.
+ * @param {ClientWithCommands} bot The client of the bot (used for fetching default config values).
+ * @param {any} data The data to scan.
+ * @param {string} [path = "root"] The actual path the function is scanning from (evolves within the recursion) -- Default to "root".
+ * @returns {Promise<Array<[Node | undefined, any]>>} A promise of list containing :
+ * 
+ * - The node of this branch of the given data, or undefined if not found;
+ * - The value of this node;
+ * - The reason for the error, or undefined if there was no error.
+ */
+export async function guildDataScanner(bot:ClientWithCommands, data:any, path:string="root") : Promise<Array<[Node | undefined, any, string | undefined]>> {
+    let toReturn:Array<[Node | undefined, any, string | undefined]> = [];
+    
+    if(data === undefined || data === null) {
+        let finalPath = path.replace("root.0.", "");
+        toReturn.push(await isValidProperty(bot, finalPath, data) ? [finalPath as Node, data, undefined] : [undefined, data, "The given data is not a property of the server config file."]);
+        return toReturn;
     }
+    const keys = Object.keys(data);
+    if(keys.length === 0 || typeof data === "string"){
+        let finalPath = path.replace("root.0.", "");
+        toReturn.push(await isValidProperty(bot, finalPath, data) ? [finalPath as Node, data, undefined] : [undefined, data, "The given data is not a property of the server config file."]);
+        return toReturn;
+    }
+
+    toReturn = (await Promise.all(keys.flatMap(async key => {
+        return await guildDataScanner(bot, data[key], path + "." + key);
+    }))).flat();
+
+    return toReturn;
 }
 
 // TODO : jsDoc

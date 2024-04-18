@@ -1,7 +1,7 @@
-import Discord, { ActionRowBuilder, DiscordAPIError, messageLink, Options, PresenceUpdateStatus } from 'discord.js';
+import Discord, { ActionRowBuilder, DiscordAPIError, EmbedBuilder, messageLink, Options, PresenceUpdateStatus } from 'discord.js';
 import { LogLevel, simplePrint } from '../utils/consoleHandler';
 import ClientWithCommands from '../utils/clientWithCommands';
-import setHandlers, { IGuildHandlerVarArchitecture, Node } from '../utils/guildHandler';
+import setHandlers, { IGuildHandlerVarArchitecture, Node, guildDataScanner} from '../utils/guildHandler';
 import { tryFunction } from '../utils/tryFunction';
 import print from '../utils/consoleHandler';
 import { fstat } from 'fs';
@@ -43,7 +43,6 @@ export default {
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
-                            if(!guildData.logChannel) { return guildData; }
                             guildData.logChannel.id = interaction.options.getChannel("log_channel")?.id ?? "-1";
                             return guildData;
                         });
@@ -79,7 +78,6 @@ export default {
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
-                            if(!guildData.logChannel) { return guildData; }
                             guildData.logChannel.logLevel = interaction.options.getInteger("log_level") ?? LogLevel.Info;
                             return guildData;
                         });
@@ -226,21 +224,60 @@ export default {
                                 await print("An error occured while parsing the file's content to a data array.", LogLevel.Error, bot, interaction.guild);
                                 return;
                             }
-                            if(data.length !== 1) { return interaction.followUp("Oops, it seems that the file you provided doesn't contain ONE guild data or ONE guild data property"); }
-                            const buff = await bot.guildHandlers.get(interaction.guild)?.guildData.isGuildDataOfGuild(data[0], interaction.guild) ?? [undefined, data];
-                            const fData = buff[1];
-                            const dataNode = buff[0];
-                            if(!dataNode) { 
-                                await interaction.followUp("Oops, it seems that the file you provided cannot be read as guild data.");
-                                await print("The provided file is not readable as guild data. Here is the extracted data :\r\n```json\r\n" + JSON.stringify(fData, undefined, 4) + "```", LogLevel.Error, bot, interaction.guild);
-                                return;
-                            }
-                            console.log(fData)
-                            await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async config => {
-                                if(dataNode === "root") { return fData; }
-                                return await setNestedProperty(config, dataNode, fData);
+                            const results = await guildDataScanner(bot, data);
+                            await interaction.followUp({
+                                content : "",
+                                embeds : await Promise.all(results.map(async (result) => {
+                                    if(!interaction.guild) {
+                                        return new Discord.EmbedBuilder()
+                                            .setColor(0xFF0000)
+                                            .setTitle("Critical Failure")
+                                            .setDescription("An error occured while constructing the action report : unable to find the guild the interaction was sent from.")
+                                            .addFields([
+                                                {
+                                                    name : "Data :",
+                                                    value : "```json\r\n" + JSON.stringify(result[1], undefined, 4) + "```"
+                                                },
+                                                {
+                                                    name :"Response",
+                                                    value : "Ommited data"
+                                                }
+                                            ]);
+                                    }
+                                    let good:boolean = false;
+                                    if(result[0]){
+                                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
+                                            return result[0] ? setNestedProperty(guildData, result[0], result[1]) : guildData;
+                                        });
+                                    }
+                                    await interaction.followUp("This server setup has been changed.");
+                                    return new Discord.EmbedBuilder()
+                                        .setColor(result[0]
+                                            ? 0x00FF00
+                                            : 0xd6520d)
+                                        .setTitle(result[0]
+                                            ? "Success :"
+                                            : "Error :")
+                                        .setDescription(result[0]
+                                            ? "The following data was successfully set."
+                                            : "The following data was omitted for : `" + result[2] + "`")
+                                        .addFields([
+                                            {
+                                                name : "Data :",
+                                                value : "```json\r\n" + JSON.stringify(result[1], undefined, 4) + "```"
+                                            },
+                                            {
+                                                name : "Response :",
+                                                value : result[0] && !result[2]
+                                                ? "Tried to modify data"
+                                                : result[2] ?? "No error message was thrown."
+                                            }
+                                        ]);
+                                }))
                             });
-                            await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
+                            if(results.every(result => result[0] !== undefined)){
+                                await interaction.followUp("The data has been successfully modified. You can ask for it with `/setup data get`.");
+                            }
                         });
                     }
                 }
