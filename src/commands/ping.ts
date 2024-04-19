@@ -1,5 +1,6 @@
 import Discord, { messageLink, Options } from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
+import ICommand from '../utils/command';
 
 /**
  * simple fonction that respond pong when the user send /ping
@@ -21,4 +22,4 @@ export default {
     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
         await interaction.followUp("pong");
     }
-}
+} as ICommand;

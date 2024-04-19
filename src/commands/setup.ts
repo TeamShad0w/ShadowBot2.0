@@ -10,6 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream/promises';
 import { setNestedProperty } from '../utils/objectNesting';
+import ICommand from '../utils/command';
 
 /**
  * Grants administrators the ability to modify the bot to suit their servers the best it can
@@ -338,4 +339,4 @@ export default {
             await interaction.followUp({ content : "Here is the new data : \r\n```json\r\n" + data + "```", ephemeral : true });
         }
     }
-}
+} as ICommand;

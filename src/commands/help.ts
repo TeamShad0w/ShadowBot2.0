@@ -3,6 +3,7 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import path from "path";
 import fs from "fs"
 import print from '../utils/consoleHandler';
+import ICommand from '../utils/command';
 
 /**
  * search each js file in commands and 
@@ -41,4 +42,4 @@ export default {
             })
         });
     }
-};
+} as ICommand;
