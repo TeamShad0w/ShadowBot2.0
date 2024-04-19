@@ -11,6 +11,9 @@ import path from 'path';
 import { pipeline } from 'stream/promises';
 import { setNestedProperty } from '../utils/objectNesting';
 
+/**
+ * Grants administrators the ability to modify the bot to suit their servers the best it can
+ */
 export default {
     name : "setup",
     description : "changes settings for how the bot should behave on your discord server",
@@ -39,7 +42,14 @@ export default {
                             type : "Boolean"
                         }
                     ],
-                    //TODO : jsDoc
+                    /**
+                     * executes this subcommand. (see module description)
+                     * 
+                     * @param {ClientWithCommands} bot the client used by the bot
+                     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+                     * 
+                     * @returns {Promise<void>}
+                     */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
@@ -74,7 +84,14 @@ export default {
                             type : "Boolean"
                         }
                     ],
-                    //TODO : jsDoc
+                    /**
+                     * executes this subcommand. (see module description)
+                     * 
+                     * @param {ClientWithCommands} bot the client used by the bot
+                     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+                     * 
+                     * @returns {Promise<void>}
+                     */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
@@ -107,7 +124,14 @@ export default {
                             ]
                         }
                     ],
-                    //TODO : jsDoc
+                    /**
+                     * executes this subcommand. (see module description)
+                     * 
+                     * @param {ClientWithCommands} bot the client used by the bot
+                     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+                     * 
+                     * @returns {Promise<void>}
+                     */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void>{
                         if(!interaction.guild) { return; }
                         const node = (interaction.options.getString("node") ?? "root") as Node;
@@ -181,7 +205,14 @@ export default {
                             required : false
                         }
                     ],
-                    //TODO : jsDoc
+                    /**
+                     * executes this subcommand. (see module description)
+                     * 
+                     * @param {ClientWithCommands} bot the client used by the bot
+                     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+                     * 
+                     * @returns {Promise<void>}
+                     */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
                         const ghostMsg = await interaction.followUp("Data fetched !");
@@ -208,7 +239,14 @@ export default {
                             required : true
                         }
                     ],
-                    //TODO : jsDoc
+                    /**
+                     * executes this subcommand. (see module description)
+                     * 
+                     * @param {ClientWithCommands} bot the client used by the bot
+                     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+                     * 
+                     * @returns {Promise<void>}
+                     */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         const file = interaction.options.getAttachment("json_file")?.url;
                         if(!file){ return; }
@@ -285,7 +323,14 @@ export default {
         }
     ],
 
-    //TODO : jsDoc
+    /**
+     * executes the module's command. (see module description)
+     * 
+     * @param {ClientWithCommands} bot the client used by the bot
+     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+     * 
+     * @returns {Promise<void>}
+     */
     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
         if(!interaction.guild) { return; }
         if(interaction.options.getBoolean("return_data")) {
