@@ -8,7 +8,7 @@ import print, { LogLevel } from '../utils/consoleHandler';
  */
 export default {
     name : "kick",
-    description : "Kicks the specified user from the server.",
+    description : "kicks the specified user from the server.",
     permission : Discord.PermissionFlagsBits.KickMembers,
     //TODO : handle this command in dms with an rolling panel to choose the server where to kick the user from
     dm : false,
