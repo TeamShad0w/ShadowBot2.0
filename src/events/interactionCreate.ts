@@ -19,7 +19,12 @@ export default {
                 await command.run(bot, interaction);
             }catch(err){
                 print(err, LogLevel.Error, bot, interaction.guild);
-                interaction.reply("Sorry, an error has occurred. Please try again. If this persists, contact and administrator.");
+                if(interaction.replied || interaction.deferred){
+                    interaction.deleteReply()
+                    interaction.followUp({content:"Sorry, an error has occurred. Please try again. If this persists, contact and administrator.", ephemeral:true});
+                    return;
+                }
+                interaction.reply({content:"Sorry, an error has occurred. Please try again. If this persists, contact and administrator.", ephemeral:true});
             }
         }
     }
