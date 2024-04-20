@@ -48,44 +48,16 @@ export class GuildHandler {
     kickChannel : Discord.Snowflake;
 
     // TODO : jsDoc
-    constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined, _kickChannel:Discord.Snowflake | undefined = undefined) {
-        this.id = _id;
-        if(!_logChannel) {
-            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on
-            //! even if it is modified in 0.json but not here.
-            this.logChannel = { id: "-1", logLevel:2 };
-            bot.configHandler.getDefault().then(defaultConfig => {
-                getNestedProperty(defaultConfig, "guilds.0").then((defaultValue:IGuildHandlerVarArchitecture) => {
-                    this.logChannel = defaultValue.logChannel;
-                    bot.guilds.fetch(this.id).then(guild => {
-                        this.modifyGuildSetup(bot, guild, guildData => {
-                            guildData.logChannel = this.logChannel;
-                            return guildData;
-                        });
-                    });
-                });
-            });
-        }else{
-            this.logChannel = _logChannel;
+    constructor(_id:Discord.Snowflake, _default:Iconfig)
+    constructor(_data:IGuildHandlerVarArchitecture)
+    constructor(arg1:Discord.Snowflake | IGuildHandlerVarArchitecture, _default?:Iconfig) {
+        if(_default){
+            arg1 = _default.guilds[0] 
         }
-        if(!_kickChannel) {
-            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on
-            //! even if it is modified in 0.json but not here.
-            this.kickChannel = "-1";
-            bot.configHandler.getDefault().then(defaultConfig => {
-                getNestedProperty(defaultConfig, "guilds.0").then((defaultValue:IGuildHandlerVarArchitecture) => {
-                    this.kickChannel = defaultValue.kickChannel;
-                    bot.guilds.fetch(this.id).then(guild => {
-                        this.modifyGuildSetup(bot, guild, guildData => {
-                            guildData.kickChannel = this.kickChannel;
-                            return guildData;
-                        });
-                    });
-                });
-            });
-        }else{
-            this.kickChannel = _kickChannel;
-        }
+        if(typeof arg1 === "string") { throw new Error("The typescript overload didn't work as intended and this function has been called : new GuildHandler(_id:string);"); }
+        this.id = arg1.id;
+        this.logChannel = arg1.logChannel;
+        this.kickChannel = arg1.kickChannel;
     }
 
     // TODO : jsDoc
@@ -152,7 +124,7 @@ export async function guildDataScanner(bot:ClientWithCommands, data:any, path:st
 
 // TODO : jsDoc
 export async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
-    let guildData:GuildHandler = new GuildHandler(bot, guild.id);
+    let guildData:GuildHandler = new GuildHandler(guild.id, await bot.configHandler.getDefault());
     bot.guildHandlers.set(guild, {
         guildData : guildData,
         id : guild.id
@@ -179,7 +151,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
                 return true;
             }
             bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(bot, guild.id, guildData.logChannel, guildData.kickChannel),
+                guildData : new GuildHandler(guildData),
                 id : guild.id
             });
             return false;
