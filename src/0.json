@@ -6,7 +6,8 @@
             "logChannel" : {
                 "id" : "-1",
                 "logLevel" : 2
-            }
+            },
+            "kickChannel" : "-1"
         }
     ]
 }

@@ -24,6 +24,7 @@ export interface IGlobalGuildContainer {
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
+    kickChannel : Discord.Snowflake;
 }
 
 // TODO : jsDoc
@@ -44,16 +45,18 @@ export async function isValidProperty(bot:ClientWithCommands, node:string, value
 export class GuildHandler {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
+    kickChannel : Discord.Snowflake;
 
     // TODO : jsDoc
-    constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined) {
+    constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined, _kickChannel:Discord.Snowflake | undefined = undefined) {
         this.id = _id;
         if(!_logChannel) {
-            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on.
+            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on
+            //! even if it is modified in 0.json but not here.
             this.logChannel = { id: "-1", logLevel:2 };
             bot.configHandler.getDefault().then(defaultConfig => {
-                getNestedProperty(defaultConfig, "guilds.0.logChannel").then(defaultValue => {
-                    this.logChannel = defaultValue;
+                getNestedProperty(defaultConfig, "guilds.0").then((defaultValue:IGuildHandlerVarArchitecture) => {
+                    this.logChannel = defaultValue.logChannel;
                     bot.guilds.fetch(this.id).then(guild => {
                         this.modifyGuildSetup(bot, guild, guildData => {
                             guildData.logChannel = this.logChannel;
@@ -64,6 +67,24 @@ export class GuildHandler {
             });
         }else{
             this.logChannel = _logChannel;
+        }
+        if(!_kickChannel) {
+            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on
+            //! even if it is modified in 0.json but not here.
+            this.kickChannel = "-1";
+            bot.configHandler.getDefault().then(defaultConfig => {
+                getNestedProperty(defaultConfig, "guilds.0").then((defaultValue:IGuildHandlerVarArchitecture) => {
+                    this.kickChannel = defaultValue.kickChannel;
+                    bot.guilds.fetch(this.id).then(guild => {
+                        this.modifyGuildSetup(bot, guild, guildData => {
+                            guildData.kickChannel = this.kickChannel;
+                            return guildData;
+                        });
+                    });
+                });
+            });
+        }else{
+            this.kickChannel = _kickChannel;
         }
     }
 
@@ -158,7 +179,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
                 return true;
             }
             bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(bot, guild.id, guildData.logChannel),
+                guildData : new GuildHandler(bot, guild.id, guildData.logChannel, guildData.kickChannel),
                 id : guild.id
             });
             return false;

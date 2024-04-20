@@ -22,6 +22,35 @@ export default {
     dm : false,
     options : [
         {
+            name : "kick_channel",
+            description : "the channel to display kick messages into",
+            type : "Subcommand",
+            options : [
+                {
+                    name : "kick_channel",
+                    desciption : "the textual channel to set the kick channel to",
+                    type : "Channel",
+                    required : true
+                }
+            ],
+            /**
+             * executes this subcommand. (see module description)
+             * 
+             * @param {ClientWithCommands} bot the client used by the bot
+             * @param {ChatInputCommandInteraction} interaction the interaction from the user
+             * 
+             * @returns {Promise<void>}
+             */
+            async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction) : Promise<void> {
+                if(!interaction.guild) { return; }
+                await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
+                    guildData.kickChannel = interaction.options.getChannel("kick_channel")?.id ?? "-1";
+                    return guildData;
+                });
+                await interaction.followUp("This server setup has been changed.");
+            }
+        },
+        {
             name : "logs",
             description : "all the settings for the displayed logs",
             type : "SubcommandGroup",
