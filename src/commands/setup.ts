@@ -44,7 +44,7 @@ export default {
             async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction) : Promise<void> {
                 if(!interaction.guild) { return; }
                 await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
-                    guildData.kickChannel = interaction.options.getChannel("kick_channel")?.id ?? "-1";
+                    guildData.kickChannelID = interaction.options.getChannel("kick_channel")?.id ?? "-1";
                     return guildData;
                 });
                 await interaction.followUp("This server setup has been changed.");

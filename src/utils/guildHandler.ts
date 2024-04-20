@@ -24,7 +24,7 @@ export interface IGlobalGuildContainer {
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
-    kickChannel : Discord.Snowflake;
+    kickChannelID : Discord.Snowflake;
 }
 
 // TODO : jsDoc
@@ -45,19 +45,17 @@ export async function isValidProperty(bot:ClientWithCommands, node:string, value
 export class GuildHandler {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
-    kickChannel : Discord.Snowflake;
+    kickChannelID : Discord.Snowflake;
 
     // TODO : jsDoc
     constructor(_id:Discord.Snowflake, _default:Iconfig)
     constructor(_data:IGuildHandlerVarArchitecture)
     constructor(arg1:Discord.Snowflake | IGuildHandlerVarArchitecture, _default?:Iconfig) {
-        if(_default){
-            arg1 = _default.guilds[0] 
-        }
-        if(typeof arg1 === "string") { throw new Error("The typescript overload didn't work as intended and this function has been called : new GuildHandler(_id:string);"); }
-        this.id = arg1.id;
-        this.logChannel = arg1.logChannel;
-        this.kickChannel = arg1.kickChannel;
+        const data = _default ? _default.guilds[0] : arg1
+        if(typeof data === "string") { throw new Error("The typescript overload didn't work as intended and this function has been called : new GuildHandler(_id:string);"); }
+        this.id = typeof arg1 === "string" ? arg1 : data.id;
+        this.logChannel = data.logChannel;
+        this.kickChannelID = data.kickChannelID;
     }
 
     // TODO : jsDoc

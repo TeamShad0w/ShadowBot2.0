@@ -68,16 +68,16 @@ export default {
             return;
         }
         interaction.followUp("The user was successfully kicked !");
-        const kickChannelID = bot.guildHandlers.get(interaction.guild)?.guildData.kickChannel;
+        const kickChannelID = bot.guildHandlers.get(interaction.guild)?.guildData.kickChannelID;
         if(!kickChannelID || kickChannelID === "-1") { return; }
-        const kickChannel = await (interaction.guild.channels.fetch(kickChannelID));
-        if(!kickChannel || !kickChannel.isTextBased()) { print("Unable to send kick message : The kick channel is not existing or not text-based", LogLevel.Warn, bot, interaction.guild); return; }
+        const KickChannel = await (interaction.guild.channels.fetch(kickChannelID));
+        if(!KickChannel || !KickChannel.isTextBased()) { print("Unable to send kick message : The kick channel is not existing or not text-based", LogLevel.Warn, bot, interaction.guild); return; }
         const kickEmbed = new Discord.EmbedBuilder()
             .setTitle(member.user.globalName + (member.nickname ? " (" + member.nickname + ")" : "") + " was kicked out of the server")
             .setDescription("__reason :__\r\n" + reason)
             .setThumbnail(member.avatar ? member.avatarURL() : member.user.avatarURL())
             .setColor(0x00FFFF)
-        kickChannel.send({content:"", embeds:[kickEmbed]});
+        KickChannel.send({content:"", embeds:[kickEmbed]});
     }
 
 } as ICommand;
