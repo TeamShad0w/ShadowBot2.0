@@ -60,7 +60,7 @@ export default {
             return;
         }
         const reason = (interaction.options.getString("reason") ?? "No reason specified")
-        member.kick("you have been kick for : " + reason + "!");
+        member.kick("you have been kicked for : " + reason + "!");
         if(interaction.options.get("silent")){
             const ghostMsg = await interaction.followUp("Processing...");
             await ghostMsg.delete();
