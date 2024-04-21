@@ -6,16 +6,16 @@ import { ITryFunctionCallback, tryFunction } from '../utils/tryFunction';
 import Discord from 'discord.js';
 import setHandlers from '../utils/guildHandler';
 
-// TODO : jsDoc
-
 /**
- * simple fonction that print when ur bot is online 
- * @param {ClientWithCommands} bot the client used by the bot
- * 
- * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ * Contains the function to execute when the bot is online
  */
-
 export default {
+    /**
+     * simple fonction that print when ur bot is online 
+     * @param {ClientWithCommands} bot the client used by the bot
+     * 
+     * @returns {Promise<void>}
+     */
     listener : async (bot:ClientWithCommands) : Promise<void> =>  {
         if (bot.user === null) { return; }
         await tryFunction(bot, loadSlashInteractions);
