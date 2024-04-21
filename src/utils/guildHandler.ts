@@ -15,12 +15,6 @@ export interface ILogChannelDataHolder {
 }
 
 // TODO : jsDoc
-export interface IGlobalGuildContainer {
-    guildData : GuildHandler;
-    id : Discord.Snowflake;
-}
-
-// TODO : jsDoc
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
@@ -43,8 +37,7 @@ export async function isValidProperty(bot:ClientWithCommands, node:string, value
 }
 
 // TODO : jsDoc
-// TODO : implements IGuildHandlerVarArchitecture
-export class GuildHandler {
+export class GuildHandler implements IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
     kickChannelID : Discord.Snowflake;
@@ -128,14 +121,11 @@ export async function guildDataScanner(bot:ClientWithCommands, data:any, path:st
 
 // TODO : jsDoc
 export async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
-    let guildData:GuildHandler = new GuildHandler(guild.id, await bot.configHandler.getDefault());
-    bot.guildHandlers.set(guild, {
-        guildData : guildData,
-        id : guild.id
-    });
+    let guildHandler = new GuildHandler(guild.id, await bot.configHandler.getDefault());
+    bot.guildHandlers.set(guild, guildHandler);
     bot.configHandler.modify(bot, guild, (config:Iconfig) => {
         let configBuffer = config;
-        configBuffer.guilds.push(guildData);
+        configBuffer.guilds.push(guildHandler);
         return configBuffer;
     });
 }
@@ -154,10 +144,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
             if (guildData.id !== guild.id){
                 return true;
             }
-            bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(guildData),
-                id : guild.id
-            });
+            bot.guildHandlers.set(guild, new GuildHandler(guildData));
             return false;
         })){
             createNewGuildData(bot, guild);
