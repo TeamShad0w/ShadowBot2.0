@@ -5,8 +5,12 @@ import { LogLevel } from '../utils/consoleHandler';
 import ICommand from '../utils/command';
 import { IOptions } from '../utils/command'
 
-//TODO : fix this fucking mess
-
+/**
+ * Setups a simple (not subcommand nesting) option for a slashCommand
+ * @param {any} slashCommand the command parent of the option
+ * @param {IOptions} _option the option to setup as an object of interface IOptions
+ * @returns {void}
+ */
 function simpleCommandSetup(slashCommand:any, _option:IOptions) : void {
     
     slashCommand[`add${_option.type}Option`]((option:any) => {
@@ -21,7 +25,14 @@ function simpleCommandSetup(slashCommand:any, _option:IOptions) : void {
     });
 }
 
-//TODO : jsDoc
+/**
+ * Setups a complete command containig subCommand nesting.
+ * @param {ClientWithCommands} bot The bot's client
+ * @param {string} err the error pile 
+ * @param {[ICommand, "command"] | [IOptions, "option"]} _command The parent command or the subCommand/subCommandGroup option that contains other options
+ * @param {Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder} constructor The contructor parent of the options to setup.
+ * @returns {[string, Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder]} All the couples (error / processed object)
+ */
 function completeCommandSetup(bot:ClientWithCommands, err:string, _command:[ICommand, "command"] | [IOptions, "option"], constructor:Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder) : [string, Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder] {    
     constructor.setName(_command[0].name)
     .setDescription(_command[0].description);

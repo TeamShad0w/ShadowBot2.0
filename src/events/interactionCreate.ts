@@ -6,9 +6,16 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import Discord, { messageLink } from 'discord.js';
 import subcomandRunner from '../utils/subcommandRunner';
 
-// TODO : jsDoc
-
+/**
+ * Contains the function executed when an interaction is created.
+ */
 export default {
+    /**
+     * 
+     * @param {ClientWithCommands} bot The bot's client
+     * @param {Discord.Interaction} interaction The created interaction that the bot will process
+     * @returns {Promise<void>}
+     */
     listener : async (bot:ClientWithCommands, interaction:Discord.Interaction) : Promise<void> => {
         if(interaction instanceof Discord.ChatInputCommandInteraction){
             let command:ICommand = await require(`../commands/${interaction.commandName}`).default;
