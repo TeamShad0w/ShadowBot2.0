@@ -43,7 +43,7 @@ export default {
              */
             async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction) : Promise<void> {
                 if(!interaction.guild) { return; }
-                await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
+                await bot.guildHandlers.get(interaction.guild)?.modifyGuildSetup(bot, interaction.guild, guildData => {
                     guildData.kickChannelID = interaction.options.getChannel("kick_channel")?.id ?? "-1";
                     return guildData;
                 });
@@ -72,7 +72,7 @@ export default {
              */
             async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction) : Promise<void> {
                 if(!interaction.guild) { return; }
-                await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
+                await bot.guildHandlers.get(interaction.guild)?.modifyGuildSetup(bot, interaction.guild, guildData => {
                     guildData.banChannelID = interaction.options.getChannel("ban_channel")?.id ?? "-1";
                     return guildData;
                 });
@@ -111,7 +111,7 @@ export default {
                      */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
-                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, guildData => {
+                        await bot.guildHandlers.get(interaction.guild)?.modifyGuildSetup(bot, interaction.guild, guildData => {
                             guildData.logChannel.id = interaction.options.getChannel("log_channel")?.id ?? "-1";
                             return guildData;
                         });
@@ -153,7 +153,7 @@ export default {
                      */
                     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
                         if(!interaction.guild) { return; }
-                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
+                        await bot.guildHandlers.get(interaction.guild)?.modifyGuildSetup(bot, interaction.guild, async guildData => {
                             guildData.logChannel.logLevel = interaction.options.getInteger("log_level") ?? LogLevel.Info;
                             return guildData;
                         });
@@ -227,7 +227,7 @@ export default {
                             // TODO : find confirmation interaction type for filter (       here ↓  and here ↓ )
                             const confirmation = await response.awaitMessageComponent({filter : (i : any) => i.user.id === interaction.user.id, time : 60_000});
                             if(confirmation.customId === 'confirm'){
-                                const oldData = await bot.guildHandlers.get(interaction.guild)?.guildData.resetGuildData(node, bot, interaction.guild);
+                                const oldData = await bot.guildHandlers.get(interaction.guild)?.resetGuildData(node, bot, interaction.guild);
                                 const operationDoneEmbed = new Discord.EmbedBuilder()
                                     .setColor(0x43d927)
                                     .setTitle("Data reseted successfully")
@@ -343,7 +343,7 @@ export default {
                                     }
                                     let good:boolean = false;
                                     if(result[0]){
-                                        await bot.guildHandlers.get(interaction.guild)?.guildData.modifyGuildSetup(bot, interaction.guild, async guildData => {
+                                        await bot.guildHandlers.get(interaction.guild)?.modifyGuildSetup(bot, interaction.guild, async guildData => {
                                             return result[0] ? setNestedProperty(guildData, result[0], result[1]) : guildData;
                                         });
                                     }

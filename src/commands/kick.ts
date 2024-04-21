@@ -68,7 +68,7 @@ export default {
             return;
         }
         interaction.followUp("The user was successfully kicked !");
-        const kickChannelID = bot.guildHandlers.get(interaction.guild)?.guildData.kickChannelID;
+        const kickChannelID = bot.guildHandlers.get(interaction.guild)?.kickChannelID;
         if(!kickChannelID || kickChannelID === "-1") { return; }
         const KickChannel = await (interaction.guild.channels.fetch(kickChannelID));
         if(!KickChannel || !KickChannel.isTextBased()) { print("Unable to send kick message : The kick channel is not existing or not text-based", LogLevel.Warn, bot, interaction.guild); return; }

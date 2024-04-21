@@ -81,7 +81,7 @@ export default {
             return;
         }
         interaction.followUp("The user was successfully banned !");
-        const banChannelID = bot.guildHandlers.get(interaction.guild)?.guildData.banChannelID;
+        const banChannelID = bot.guildHandlers.get(interaction.guild)?.banChannelID;
         if(!banChannelID || banChannelID === "-1") { return; }
         const banChannel = await (interaction.guild.channels.fetch(banChannelID));
         if(!banChannel || !banChannel.isTextBased()) { print("Unable to send ban message : The ban channel is not existing or not text-based", LogLevel.Warn, bot, interaction.guild); return; }

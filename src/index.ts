@@ -10,7 +10,6 @@ import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
 import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
-import { IGlobalGuildContainer } from './utils/guildHandler';
 import ConfigHandler from './utils/configHandler';
 
 /**

@@ -81,7 +81,7 @@ export default {
         }
         
         await interaction.followUp("The user was successfully unbanned !");
-        const banChannelID = bot.guildHandlers.get(interaction.guild)?.guildData.banChannelID;
+        const banChannelID = bot.guildHandlers.get(interaction.guild)?.banChannelID;
 
         if(!banChannelID || banChannelID === "-1") { return; }
         const banChannel = await (interaction.guild.channels.fetch(banChannelID));
