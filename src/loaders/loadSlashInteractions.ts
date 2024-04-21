@@ -106,7 +106,12 @@ function completeCommandSetup(bot:ClientWithCommands, err:string, _command:[ICom
     return [err, constructor];
 }
 
-//TODO : jsDoc
+/**
+ * Contains a function that setup the slash interactions, and tell to discord wich one the bot has.
+ * 
+ * @param {ClientWithCommands} bot The bot's client
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ */
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
 
     let err:string = "";
