@@ -9,6 +9,7 @@ import ClientWithCommands from './clientWithCommands';
 // TODO : jsDoc
 export interface Iconfig {
     token : string;
+    devStage : boolean;
     guilds : Array<IGuildHandlerVarArchitecture>;
 }
 
