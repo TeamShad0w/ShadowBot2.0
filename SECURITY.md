@@ -2,12 +2,14 @@
 We are trying our best to ensure the security of the collected data and as the bot must have amdmin rights we don't want any exploits to be able to break down any server that uses the bot.
 However, as this is an open-source project, there is no garantee that this discord bot is secure.
 
-## Supported Versions
+## Supported Versions for security
 
 | Version | Supported          |
 | ------- | ------------------ |
 | 0.0.2   | :x:                |
 | 0.0.3   | :x:                |
+| 0.0.4   | :x:                |
+| 0.0.5   | :x:                |
 
 ## Reporting a Vulnerability
 > [!CAUTION]

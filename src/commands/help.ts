@@ -3,15 +3,12 @@ import ClientWithCommands from '../utils/clientWithCommands';
 import path from "path";
 import fs from "fs"
 import print from '../utils/consoleHandler';
+import ICommand from '../utils/command';
 
 /**
  * search each js file in commands and 
  * add the name and fonction of the command in the list 
  * return the list as a reply of the msg
- * @param {ClientWithCommands} bot the client used by the bot
- * @param {ChatInputCommandInteraction} interaction the interaction from the user
- * 
- * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
  */
 export default {
     name : "help",
@@ -19,6 +16,14 @@ export default {
     permission : null,
     dm : true,
 
+    /**
+     * executes the module's command. (see module description)
+     * 
+     * @param {ClientWithCommands} bot the client used by the bot
+     * @param {ChatInputCommandInteraction} interaction the interaction from the user
+     * 
+     * @returns {Promise<void>}
+     */
     async run(bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction): Promise<void> {
 
         let Way:string = path.dirname(path.dirname(__filename));
@@ -37,4 +42,4 @@ export default {
             })
         });
     }
-};
+} as ICommand;

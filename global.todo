@@ -11,3 +11,5 @@ TODO : replace all config.json usage with bot.config
 TODO : overwrite toString() for all object for wich the toString() function doesn't return useful information for debugging
 
 TODO : let place to your imagination and go create commands !
+
+TODO : when getOption() returns null, handle the best you can and send warning message in log channel

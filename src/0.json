@@ -6,7 +6,9 @@
             "logChannel" : {
                 "id" : "-1",
                 "logLevel" : 2
-            }
+            },
+            "kickChannelID" : "-1",
+            "banChannelID" : "-1"
         }
     ]
 }

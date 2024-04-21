@@ -16,6 +16,9 @@ The upgraded version of the ShadowBot
 You can download the source code or clone this repository with `git clone https://github.com/C0dex73/ShadowBot2.0/`
 Use yarn to build the ts scripts into js ones.
 
+### Setup node.js
+You can just visit [this website to install node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
 ### Setup Yarn
 
 ```bash

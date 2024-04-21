@@ -24,6 +24,8 @@ export interface IGlobalGuildContainer {
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
+    kickChannelID : Discord.Snowflake;
+    banChannelID : Discord.Snowflake;
 }
 
 // TODO : jsDoc
@@ -41,30 +43,25 @@ export async function isValidProperty(bot:ClientWithCommands, node:string, value
 }
 
 // TODO : jsDoc
+// TODO : implements IGuildHandlerVarArchitecture
 export class GuildHandler {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
+    kickChannelID : Discord.Snowflake;
+    banChannelID : Discord.Snowflake;
 
     // TODO : jsDoc
-    constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined) {
-        this.id = _id;
-        if(!_logChannel) {
-            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on.
-            this.logChannel = { id: "-1", logLevel:2 };
-            bot.configHandler.getDefault().then(defaultConfig => {
-                getNestedProperty(defaultConfig, "guilds.0.logChannel").then(defaultValue => {
-                    this.logChannel = defaultValue;
-                    bot.guilds.fetch(this.id).then(guild => {
-                        this.modifyGuildSetup(bot, guild, guildData => {
-                            guildData.logChannel = this.logChannel;
-                            return guildData;
-                        });
-                    });
-                });
-            });
-        }else{
-            this.logChannel = _logChannel;
-        }
+    constructor(_id:Discord.Snowflake, _default:Iconfig)
+    // TODO : jsDoc
+    constructor(_data:IGuildHandlerVarArchitecture)
+    constructor(arg1:Discord.Snowflake | IGuildHandlerVarArchitecture, _default?:Iconfig) {
+        const data = _default ? _default.guilds[0] : arg1
+        if(typeof data === "string") { throw new Error("The typescript overload didn't work as intended and this function has been called : new GuildHandler(_id:string);"); }
+        this.id = typeof arg1 === "string" ? arg1 : data.id;
+        // TODO : find a way to do this automatically
+        this.logChannel = data.logChannel;
+        this.kickChannelID = data.kickChannelID;
+        this.banChannelID = data.banChannelID;
     }
 
     // TODO : jsDoc
@@ -131,7 +128,7 @@ export async function guildDataScanner(bot:ClientWithCommands, data:any, path:st
 
 // TODO : jsDoc
 export async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
-    let guildData:GuildHandler = new GuildHandler(bot, guild.id);
+    let guildData:GuildHandler = new GuildHandler(guild.id, await bot.configHandler.getDefault());
     bot.guildHandlers.set(guild, {
         guildData : guildData,
         id : guild.id
@@ -158,7 +155,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
                 return true;
             }
             bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(bot, guild.id, guildData.logChannel),
+                guildData : new GuildHandler(guildData),
                 id : guild.id
             });
             return false;
