@@ -25,6 +25,7 @@ export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
     kickChannelID : Discord.Snowflake;
+    banChannelID : Discord.Snowflake;
 }
 
 // TODO : jsDoc
@@ -42,20 +43,25 @@ export async function isValidProperty(bot:ClientWithCommands, node:string, value
 }
 
 // TODO : jsDoc
+// TODO : implements IGuildHandlerVarArchitecture
 export class GuildHandler {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
     kickChannelID : Discord.Snowflake;
+    banChannelID : Discord.Snowflake;
 
     // TODO : jsDoc
     constructor(_id:Discord.Snowflake, _default:Iconfig)
+    // TODO : jsDoc
     constructor(_data:IGuildHandlerVarArchitecture)
     constructor(arg1:Discord.Snowflake | IGuildHandlerVarArchitecture, _default?:Iconfig) {
         const data = _default ? _default.guilds[0] : arg1
         if(typeof data === "string") { throw new Error("The typescript overload didn't work as intended and this function has been called : new GuildHandler(_id:string);"); }
         this.id = typeof arg1 === "string" ? arg1 : data.id;
+        // TODO : find a way to do this automatically
         this.logChannel = data.logChannel;
         this.kickChannelID = data.kickChannelID;
+        this.banChannelID = data.banChannelID;
     }
 
     // TODO : jsDoc
