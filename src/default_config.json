@@ -1,4 +1,5 @@
 {
     "token" : "__INSERT_YOUR_TOKEN_HERE__",
+    "devStage" : false,
     "guilds" : []
 }

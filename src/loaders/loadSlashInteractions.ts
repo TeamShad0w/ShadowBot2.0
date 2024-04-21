@@ -123,9 +123,16 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
     });
 
     const rest = new Discord.REST({version: '10'}).setToken(bot.token == null ? "" : bot.token);
+    const config = await bot.configHandler.getValue()
 
-    await rest.put(Discord.Routes.applicationCommands(bot.user.id), {body: commands});
-
+    if(config.devStage){
+        await Promise.all(config.guilds.map(async guild => {
+            if(bot.user === null) { return "Error while loading SlashCommands : bot.user is null\r\n"; }
+            return await rest.put(Discord.Routes.applicationGuildCommands(bot.user.id, guild.id,), {body: commands});
+        }));
+    }else{
+        await rest.put(Discord.Routes.applicationCommands(bot.user.id), {body: commands});
+    }
 
     if (err === "") { return 1; }
     return err;
