@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import ClientWithCommands from "./clientWithCommands";
 
-/*
+/**
  * The different types of displayed logs.
  */
 export enum LogLevel {
@@ -13,9 +13,19 @@ export enum LogLevel {
     Critical
 }
 
-// TODO : jsDoc
+/**
+ * Sends a log as a discord embed in the logChannel of the given guild if setup
+ * @param {Discord.TextBasedChannel} logChannel The channel where the embed will be sent to
+ * @param {ClientWithCommands} bot The bot's client
+ * @param {string} msg The message to send
+ * @param {LogLevel} logLevel The logLevel of the message
+ * @param {Date} dateTime The date and time of the message
+ * @param {Discord.Guild | null} guild The guild whose the logChannel belongs to (if null, the message will be sent to every guild)
+ * @returns {Promise<void>}
+ */
 export async function sendEmbeddedLog(logChannel:Discord.TextBasedChannel, bot:ClientWithCommands, msg:string, logLevel:LogLevel, dateTime:Date, guild:Discord.Guild | null) : Promise<void> {
     
+    /** The embed for the log */
     const embeddedLog = new Discord.EmbedBuilder()
         .setTitle(LogLevel[logLevel])
         .setDescription(msg)
@@ -43,7 +53,14 @@ export async function sendEmbeddedLog(logChannel:Discord.TextBasedChannel, bot:C
     });
 }
 
-// TODO : jsDoc
+/**
+ * Decides wether or not the message should be sent
+ * @param bot The bot's client
+ * @param {Discord.Guild | null} guild The guild whose the logChannel belongs to (if null, all the guilds will be checked to see i)
+ * @param {LogLevel} logLevel The logLevel of the message
+ * @param {Date} dateTime The date and time of the message
+ * @param {string} msg The message to send
+ */
 export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | null, logLevel:LogLevel, dateTime:Date, msg:string) : Promise<void> {
     await Promise.all(bot.guilds.cache.map(async _guild => {
         if(guild !== null && guild.id !== _guild.id) { return _guild; }
