@@ -8,13 +8,13 @@ import fs from 'fs';
 import { Iconfig } from './configHandler';
 import { setNestedProperty, getNestedProperty } from './objectNesting';
 
-// TODO : jsDoc
+/** The interface of the stored data about the log channel */
 export interface ILogChannelDataHolder {
     id : Discord.Snowflake;
     logLevel : LogLevel;
 }
 
-// TODO : jsDoc
+/** The interface of the stored data bout a guild */
 export interface IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
@@ -22,11 +22,13 @@ export interface IGuildHandlerVarArchitecture {
     banChannelID : Discord.Snowflake;
 }
 
-// TODO : jsDoc
-export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel";
+// ? find a way to automate this ?
+/** The different nodes of a guild's data*/
+export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel" | "banChannelID" | "kickChannelID";
 export function isNode(node:string) : node is Node {
     // TODO : find a better way to do this ?
-    return node === "root" || node === "logChannel" || node === "logChannel.id" || node === "logChannel.logLevel";
+    // ! redundant with line 27
+    return node === "root" || node === "logChannel" || node === "logChannel.id" || node === "logChannel.logLevel" || node === "banChannelID" || node === "kickChannelID";
 }
 
 export async function isValidProperty(bot:ClientWithCommands, node:string, value:any) : Promise<boolean> {
