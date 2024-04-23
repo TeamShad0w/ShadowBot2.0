@@ -1,9 +1,8 @@
-import loadSlashInteractions from '../loaders/loadSlashInteractions';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import ICommand from '../utils/command';
 import ClientWithCommands from '../utils/clientWithCommands';
-import Discord, { messageLink } from 'discord.js';
+import Discord from 'discord.js';
 import subcomandRunner from '../utils/subcommandRunner';
 
 /**

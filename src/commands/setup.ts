@@ -1,14 +1,9 @@
-import Discord, { ActionRowBuilder, DiscordAPIError, EmbedBuilder, messageLink, Options, PresenceUpdateStatus } from 'discord.js';
-import { LogLevel, simplePrint } from '../utils/consoleHandler';
+import Discord from 'discord.js';
+import { LogLevel } from '../utils/consoleHandler';
 import ClientWithCommands from '../utils/clientWithCommands';
-import setHandlers, { IGuildHandlerVarArchitecture, Node, guildDataScanner} from '../utils/guildHandler';
-import { tryFunction } from '../utils/tryFunction';
+import { Node, guildDataScanner} from '../utils/guildHandler';
 import print from '../utils/consoleHandler';
-import { fstat } from 'fs';
 import request from 'request';
-import fs from 'fs';
-import path from 'path';
-import { pipeline } from 'stream/promises';
 import { setNestedProperty } from '../utils/objectNesting';
 import ICommand from '../utils/command';
 

@@ -1,4 +1,4 @@
-import Discord, { ChatInputCommandInteraction, Interaction, messageLink, Options } from 'discord.js';
+import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import ICommand from '../utils/command';
 import print, { LogLevel } from '../utils/consoleHandler';

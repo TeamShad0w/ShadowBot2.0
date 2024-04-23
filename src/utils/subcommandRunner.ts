@@ -1,7 +1,6 @@
-import Discord, { SelectMenuOptionBuilder } from 'discord.js';
+import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import ICommand, { IOptions } from '../utils/command';
-import print from './consoleHandler';
 
 async function findSubcommand(root:IOptions | ICommand, name:string, bot:ClientWithCommands, interaction:Discord.ChatInputCommandInteraction) : Promise<void> {
     if(!root.options) { return; }

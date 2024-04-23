@@ -1,4 +1,4 @@
-import Discord, { BurstHandlerMajorIdKey, Options, SlashCommandBuilder } from 'discord.js';
+import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';

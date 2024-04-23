@@ -2,8 +2,7 @@ import loadSlashInteractions from '../loaders/loadSlashInteractions';
 import print, { releaseLogsFromPipe } from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import ClientWithCommands from '../utils/clientWithCommands';
-import { ITryFunctionCallback, tryFunction } from '../utils/tryFunction';
-import Discord from 'discord.js';
+import { tryFunction } from '../utils/tryFunction';
 import setHandlers from '../utils/guildHandler';
 
 /**

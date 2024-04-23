@@ -1,5 +1,5 @@
-import { IGuildHandlerVarArchitecture, createNewGuildData } from './guildHandler';
-import print, { simplePrint } from './consoleHandler';
+import { IGuildHandlerVarArchitecture } from './guildHandler';
+import print from './consoleHandler';
 import { LogLevel } from './consoleHandler';
 import fs from 'fs';
 import path from "path";

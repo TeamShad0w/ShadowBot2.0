@@ -1,10 +1,6 @@
-import { LogLevel, simplePrint } from './consoleHandler';
-import Discord, { Client } from 'discord.js';
+import { LogLevel } from './consoleHandler';
+import Discord from 'discord.js';
 import ClientWithCommands from './clientWithCommands';
-import print from './consoleHandler';
-import config from '../config.json';
-import { tryFunction } from './tryFunction';
-import fs from 'fs';
 import { Iconfig } from './configHandler';
 import { setNestedProperty, getNestedProperty } from './objectNesting';
 

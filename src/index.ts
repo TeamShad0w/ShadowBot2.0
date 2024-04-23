@@ -4,12 +4,10 @@ import Config from './config.json';
 import Default from './0.json';
 import loadCommands from './loaders/loadCommands';
 import loadEvents from './loaders/loadEvents';
-import loadSlashInteractions from './loaders/loadSlashInteractions';
 import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
 import { tryFunction } from './utils/tryFunction';
-import ConfigHandler from './utils/configHandler';
 
 /**
  * Tries to connect the bot Client to Discord servers

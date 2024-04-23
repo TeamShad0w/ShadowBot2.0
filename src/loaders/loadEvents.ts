@@ -1,4 +1,3 @@
-import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import fs from "fs";
 import path from "path"
