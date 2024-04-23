@@ -58,4 +58,6 @@ async function main():Promise<void> {
     print("commands loaded.", LogLevel.Info, bot, null, true);
 }
 
-main();
+if (typeof require !== 'undefined' && require.main === module) {
+    main();
+}
