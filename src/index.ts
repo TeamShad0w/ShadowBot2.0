@@ -3,7 +3,6 @@ import Discord from 'discord.js';
 import Config from './config.json';
 import Default from './0.json';
 import loadCommands from './loaders/loadCommands';
-import loadDatabase from './loaders/loadDatabase';
 import loadEvents from './loaders/loadEvents';
 import loadSlashInteractions from './loaders/loadSlashInteractions';
 import ClientWithCommands from './utils/clientWithCommands';
@@ -43,12 +42,6 @@ async function main():Promise<void> {
     await tryFunction(bot, login);
 
     print("bot logged in.", LogLevel.Info, bot, null, true);
-
-    print("connecting to database...", LogLevel.Log, bot, null, true);
-
-    await tryFunction(bot, loadDatabase);
-
-    print("bot connected to database.", LogLevel.Info, bot, null, true);
 
     print("loading events...", LogLevel.Log, bot, null, true);
 
