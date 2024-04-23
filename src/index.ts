@@ -8,7 +8,7 @@ import loadSlashInteractions from './loaders/loadSlashInteractions';
 import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
-import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
+import { tryFunction } from './utils/tryFunction';
 import ConfigHandler from './utils/configHandler';
 
 /**
