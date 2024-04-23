@@ -27,7 +27,10 @@ async function login(bot:ClientWithCommands):Promise<number|string> {
     return 1;
 }
 
-//TODO : jsDoc
+/**
+ * The main programs that runs the bot
+ * @returns {Promise<void>}
+ */
 async function main():Promise<void> {
 
     /**
