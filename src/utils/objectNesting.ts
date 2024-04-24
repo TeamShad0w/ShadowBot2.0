@@ -19,7 +19,15 @@ export async function setNestedProperty(obj:any, path:string, value:any):Promise
     };
 }
 
-// TODO : jsDoc
+/**
+ * This function allows you to access a nested property in an object from a string path.
+ * 
+ * Inspired by : https://webtips.dev/webtips/javascript/update-nested-property-by-string
+ * 
+ * @param {any} obj The nest object wich contains the property to get
+ * @param {string} path The path to the property to get
+ * @returns {Promise<any>} The value of the property
+ */
 export async function getNestedProperty(obj:any, path:string):Promise<any> {
     const [head, ...rest] = path.split('.');
     return rest.length ? await getNestedProperty(obj[head], rest.join('.')) : obj[head];

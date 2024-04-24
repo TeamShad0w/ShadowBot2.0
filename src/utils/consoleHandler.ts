@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import ClientWithCommands from "./clientWithCommands";
 
-/*
+/**
  * The different types of displayed logs.
  */
 export enum LogLevel {
@@ -13,9 +13,19 @@ export enum LogLevel {
     Critical
 }
 
-// TODO : jsDoc
+/**
+ * Sends a log as a discord embed in the logChannel of the given guild if setup
+ * @param {Discord.TextBasedChannel} logChannel The channel where the embed will be sent to
+ * @param {ClientWithCommands} bot The bot's client
+ * @param {string} msg The message to send
+ * @param {LogLevel} logLevel The logLevel of the message
+ * @param {Date} dateTime The date and time of the message
+ * @param {Discord.Guild | null} guild The guild whose the logChannel belongs to (if null, the message will be sent to every guild)
+ * @returns {Promise<void>}
+ */
 export async function sendEmbeddedLog(logChannel:Discord.TextBasedChannel, bot:ClientWithCommands, msg:string, logLevel:LogLevel, dateTime:Date, guild:Discord.Guild | null) : Promise<void> {
     
+    /** The embed for the log */
     const embeddedLog = new Discord.EmbedBuilder()
         .setTitle(LogLevel[logLevel])
         .setDescription(msg)
@@ -43,7 +53,14 @@ export async function sendEmbeddedLog(logChannel:Discord.TextBasedChannel, bot:C
     });
 }
 
-// TODO : jsDoc
+/**
+ * Decides wether or not the message should be sent
+ * @param bot The bot's client
+ * @param {Discord.Guild | null} guild The guild whose the logChannel belongs to (if null, all the guilds will be checked to see i)
+ * @param {LogLevel} logLevel The logLevel of the message
+ * @param {Date} dateTime The date and time of the message
+ * @param {string} msg The message to send
+ */
 export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | null, logLevel:LogLevel, dateTime:Date, msg:string) : Promise<void> {
     await Promise.all(bot.guilds.cache.map(async _guild => {
         if(guild !== null && guild.id !== _guild.id) { return _guild; }
@@ -60,14 +77,27 @@ export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | n
     }));
 }
 
-// TODO : jsDoc
+/**
+ * Free the logs waiting in the logPipe
+ * @param {ClientWithCommands} bot The bot's client
+ * @returns {Promise<void>}
+ */
 export async function releaseLogsFromPipe(bot:ClientWithCommands) : Promise<void> {
     bot.logPipe.forEach(async log => {
         await logOnGuild(bot, log[3], log[1], log[2], log[0]);
     });
 }
 
-// TODO : jsDoc
+/**
+ * Prints a line in the console and the log system in the differents guilds
+ * @param msg The message to display
+ * @param logLevel The type of message
+ * @param bot The bot's client
+ * @param guild The guild to display the log into, if null then the message will be sent to all of them
+ * @param hold Wether to hold the log in the logPipe for later or to display it now
+ * @param _dateTime The date and time of the log, by default : Now
+ * @returns {Promise<void>}
+ */
 export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, bot:ClientWithCommands, guild:Discord.Guild | null, hold=false, _dateTime:boolean=true) : Promise<void> {
     let dateTime = new Date();
     let dateTimeIndicator = _dateTime ? "[" + dateTime.toLocaleString().replace(", ", " at ") + "]" : "";

@@ -1,12 +1,15 @@
 {
     "token" : "__TOKEN__",
+    "devStage" : false,
     "guilds" : [
         {
             "id" : "__ID__",
             "logChannel" : {
                 "id" : "-1",
                 "logLevel" : 2
-            }
+            },
+            "kickChannelID" : "-1",
+            "banChannelID" : "-1"
         }
     ]
 }

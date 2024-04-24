@@ -1,38 +1,59 @@
-import { LogLevel, simplePrint } from './consoleHandler';
+import { LogLevel } from './consoleHandler';
 import Discord from 'discord.js';
 import ClientWithCommands from './clientWithCommands';
-import print from './consoleHandler';
-import config from '../config.json';
-import { tryFunction } from './tryFunction';
-import fs from 'fs';
 import { Iconfig } from './configHandler';
 import { setNestedProperty, getNestedProperty } from './objectNesting';
 
-// TODO : jsDoc
+/**
+ * A async or sync function that modify an guild data
+ * @param {IGuildHandlerVarArchitecture} config The entry data
+ * @returns {Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture} The processed data
+ */
+type guildDataModifyingFunc = (guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture;
+
+/** The interface of the stored data about the log channel */
 export interface ILogChannelDataHolder {
+    /** The ID of the log channel */
     id : Discord.Snowflake;
+    /** The log level of this guild */
     logLevel : LogLevel;
 }
 
-// TODO : jsDoc
-export interface IGlobalGuildContainer {
-    guildData : GuildHandler;
-    id : Discord.Snowflake;
-}
-
-// TODO : jsDoc
+/** The interface of the stored data bout a guild */
 export interface IGuildHandlerVarArchitecture {
+    /** The ID of the guild */
     id : Discord.Snowflake;
+    /** The log channel's data */
     logChannel : ILogChannelDataHolder;
+    /** The ID of the channel in wich to display kick embeds */
+    kickChannelID : Discord.Snowflake;
+    /** The ID of the channel in wich to display ban embeds */
+    banChannelID : Discord.Snowflake;
 }
 
-// TODO : jsDoc
-export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel";
+// ? find a way to automate this ?
+/** The different nodes of a guild's data*/
+export type Node = "root" | "logChannel" | "logChannel.id" | "logChannel.logLevel" | "banChannelID" | "kickChannelID";
+/**
+ * Returns true if the given string is of type Node
+ * @param {string} node The string to test
+ * @returns {boolean}
+ */
 export function isNode(node:string) : node is Node {
     // TODO : find a better way to do this ?
-    return node === "root" || node === "logChannel" || node === "logChannel.id" || node === "logChannel.logLevel";
+    // ! redundant with line 27
+    return node === "root" || node === "logChannel" || node === "logChannel.id" || node === "logChannel.logLevel" || node === "banChannelID" || node === "kickChannelID";
 }
 
+/**
+ * Test wether or not a given duo (string/value) correspond to any of the duos (node/value) of a guild data
+ * 
+ * (value must be correct type for the given node if it is one)
+ * @param {ClientWithCommands} bot The bot's client, used to get the default values of a guild data
+ * @param {string} node The string of the duo to test
+ * @param {any} value The value of the duo to test
+ * @returns {Promise<boolean>} Wether or not this duo is valid
+ */
 export async function isValidProperty(bot:ClientWithCommands, node:string, value:any) : Promise<boolean> {
     if(!isNode(node)) { return false; }
     if(node === "logChannel.logLevel") { return value.toString() in Object.keys(LogLevel).filter(k => !Number.isNaN(Number.parseInt(k))); }
@@ -40,42 +61,55 @@ export async function isValidProperty(bot:ClientWithCommands, node:string, value
     return typeof value === typeof Tdefault;
 }
 
-// TODO : jsDoc
-export class GuildHandler {
+/** The class holding a guild's data and methods to process it */
+export class GuildHandler implements IGuildHandlerVarArchitecture {
     id : Discord.Snowflake;
     logChannel : ILogChannelDataHolder;
+    kickChannelID : Discord.Snowflake;
+    banChannelID : Discord.Snowflake;
 
-    // TODO : jsDoc
-    constructor(bot:ClientWithCommands, _id:Discord.Snowflake, _logChannel:ILogChannelDataHolder | undefined = undefined) {
-        this.id = _id;
-        if(!_logChannel) {
-            //! This code may seems redundant but it prevent TypeScript from being a pain in the ass while replacing logLevel with his real default value later on.
-            this.logChannel = { id: "-1", logLevel:2 };
-            bot.configHandler.getDefault().then(defaultConfig => {
-                getNestedProperty(defaultConfig, "guilds.0.logChannel").then(defaultValue => {
-                    this.logChannel = defaultValue;
-                    bot.guilds.fetch(this.id).then(guild => {
-                        this.modifyGuildSetup(bot, guild, guildData => {
-                            guildData.logChannel = this.logChannel;
-                            return guildData;
-                        });
-                    });
-                });
-            });
-        }else{
-            this.logChannel = _logChannel;
-        }
+    /**
+     * Constructs a new GuildHandler class from the guild's id and the default values of a guild data (stored in 0.json)
+     * @param {Discord.Snowflake} _id The guild's ID
+     * @param {Iconfig} _default The default value of a guild data
+     */
+    constructor(_id:Discord.Snowflake, _default:Iconfig)
+    /**
+     * Constructs a new GuildHandler class from the guild's data
+     * @param {IGuildHandlerVarArchitecture} _data The guild's data
+     */
+    constructor(_data:IGuildHandlerVarArchitecture)
+    constructor(arg1:Discord.Snowflake | IGuildHandlerVarArchitecture, _default?:Iconfig) {
+        const data = _default ? _default.guilds[0] : arg1
+        if(typeof data === "string") { throw new Error("The typescript overload didn't work as intended and this function has been called : new GuildHandler(_id:string);"); }
+        this.id = typeof arg1 === "string" ? arg1 : data.id;
+        // TODO : find a way to do this automatically
+        this.logChannel = data.logChannel;
+        this.kickChannelID = data.kickChannelID;
+        this.banChannelID = data.banChannelID;
     }
 
-    // TODO : jsDoc
-    modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:(guildData:IGuildHandlerVarArchitecture)=>Promise<IGuildHandlerVarArchitecture>|IGuildHandlerVarArchitecture) : Promise<void> => {
-        if(!(await bot.configHandler.getValue()).guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild) }
+    /**
+     * Modifies the held data by passing it as an argument of a function and taking the returned data as the new one
+     * @param {ClientWithCommands} bot The bot's client
+     * @param {Discord.Guild} _guild The guild whose data is modified
+     * @param {guildDataModifyingFunc} builder The function in wich the data is passed
+     * @returns {Promise<void>}
+     */
+    modifyGuildSetup = async(bot:ClientWithCommands, _guild:Discord.Guild, builder:guildDataModifyingFunc) : Promise<void> => {
+        if(!(await bot.configHandler.getValue()).guilds.some(guild => guild.id === _guild.id)) { await createNewGuildData(bot, _guild); }
         let index = (await bot.configHandler.getValue()).guilds.findIndex(guild => guild.id === _guild.id);
         (await bot.configHandler.getValue()).guilds[index] = await builder((await bot.configHandler.getValue()).guilds[index]);
         await bot.configHandler.write(bot, _guild);
     }
 
-    // TODO : jsDoc
+    /**
+     * This functions resets a guildHandler class's properties to their default values as well as the data held in the json file
+     * @param {Node} node the parent node of all the data to be reset
+     * @param {ClientWithCommands} bot The bot's client
+     * @param {Discord.Guild} _guild The guild whose data is reset
+     * @returns {Promise<IGuildHandlerVarArchitecture>} The data as it was before
+     */
     resetGuildData = async(node:Node, bot:ClientWithCommands, _guild:Discord.Guild) : Promise<IGuildHandlerVarArchitecture> => {
         let index = (await bot.configHandler.getValue()).guilds.findIndex(guild => guild.id === _guild.id);
         let oldData = (await bot.configHandler.getValue()).guilds[index];
@@ -129,21 +163,26 @@ export async function guildDataScanner(bot:ClientWithCommands, data:any, path:st
     return toReturn;
 }
 
-// TODO : jsDoc
+/**
+ * Creates a new guildHandler and adds it to the bot's client collection.
+ * @param {ClientWithCommands} bot The bot's client
+ * @param {Discord.Guild} guild The guild whose data is parsed into the new guildHandler class
+ */
 export async function createNewGuildData(bot : ClientWithCommands, guild:Discord.Guild) : Promise<void> {
-    let guildData:GuildHandler = new GuildHandler(bot, guild.id);
-    bot.guildHandlers.set(guild, {
-        guildData : guildData,
-        id : guild.id
-    });
+    let guildHandler = new GuildHandler(guild.id, await bot.configHandler.getDefault());
+    bot.guildHandlers.set(guild, guildHandler);
     bot.configHandler.modify(bot, guild, (config:Iconfig) => {
         let configBuffer = config;
-        configBuffer.guilds.push(guildData);
+        configBuffer.guilds.push(guildHandler);
         return configBuffer;
     });
 }
 
-// TODO : jsDoc
+/**
+ * Setups all the needed guildHandler classes from the guilds the bot is in
+ * @param {ClientWithCommands} bot The bot's client
+ * @returns {Promise<string|number>} 1 if executed withour errors, the error message otherwise
+ */
 export default async function setHandlers(bot:ClientWithCommands): Promise<string | number> {
     let guildsData:Array<IGuildHandlerVarArchitecture> = (await bot.configHandler.getValue()).guilds;
     bot.guilds.cache.each(guild => {
@@ -157,10 +196,7 @@ export default async function setHandlers(bot:ClientWithCommands): Promise<strin
             if (guildData.id !== guild.id){
                 return true;
             }
-            bot.guildHandlers.set(guild, {
-                guildData : new GuildHandler(bot, guild.id, guildData.logChannel),
-                id : guild.id
-            });
+            bot.guildHandlers.set(guild, new GuildHandler(guildData));
             return false;
         })){
             createNewGuildData(bot, guild);

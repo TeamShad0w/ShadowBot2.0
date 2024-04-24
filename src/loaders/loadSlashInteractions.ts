@@ -1,12 +1,16 @@
-import Discord, { BurstHandlerMajorIdKey, Options, SlashCommandBuilder } from 'discord.js';
+import Discord from 'discord.js';
 import ClientWithCommands from '../utils/clientWithCommands';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import ICommand from '../utils/command';
 import { IOptions } from '../utils/command'
 
-//TODO : fix this fucking mess
-
+/**
+ * Setups a simple (not subcommand nesting) option for a slashCommand
+ * @param {any} slashCommand the command parent of the option
+ * @param {IOptions} _option the option to setup as an object of interface IOptions
+ * @returns {void}
+ */
 function simpleCommandSetup(slashCommand:any, _option:IOptions) : void {
     
     slashCommand[`add${_option.type}Option`]((option:any) => {
@@ -21,7 +25,14 @@ function simpleCommandSetup(slashCommand:any, _option:IOptions) : void {
     });
 }
 
-//TODO : jsDoc
+/**
+ * Setups a complete command containig subCommand nesting.
+ * @param {ClientWithCommands} bot The bot's client
+ * @param {string} err the error pile 
+ * @param {[ICommand, "command"] | [IOptions, "option"]} _command The parent command or the subCommand/subCommandGroup option that contains other options
+ * @param {Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder} constructor The contructor parent of the options to setup.
+ * @returns {[string, Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder]} All the couples (error / processed object)
+ */
 function completeCommandSetup(bot:ClientWithCommands, err:string, _command:[ICommand, "command"] | [IOptions, "option"], constructor:Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder) : [string, Discord.SlashCommandBuilder | Discord.SlashCommandSubcommandBuilder | Discord.SlashCommandSubcommandGroupBuilder] {    
     constructor.setName(_command[0].name)
     .setDescription(_command[0].description);
@@ -95,7 +106,12 @@ function completeCommandSetup(bot:ClientWithCommands, err:string, _command:[ICom
     return [err, constructor];
 }
 
-//TODO : jsDoc
+/**
+ * Contains a function that setup the slash interactions, and tell to discord wich one the bot has.
+ * 
+ * @param {ClientWithCommands} bot The bot's client
+ * @returns {Promise<number|string>} 1 if successful, the message to throw otherwise.
+ */
 export default async (bot:ClientWithCommands) : Promise<number|string> => {
 
     let err:string = "";
@@ -112,9 +128,16 @@ export default async (bot:ClientWithCommands) : Promise<number|string> => {
     });
 
     const rest = new Discord.REST({version: '10'}).setToken(bot.token == null ? "" : bot.token);
+    const config = await bot.configHandler.getValue()
 
-    await rest.put(Discord.Routes.applicationCommands(bot.user.id), {body: commands});
-
+    if(config.devStage){
+        await Promise.all(config.guilds.map(async guild => {
+            if(bot.user === null) { return "Error while loading SlashCommands : bot.user is null\r\n"; }
+            return await rest.put(Discord.Routes.applicationGuildCommands(bot.user.id, guild.id,), {body: commands});
+        }));
+    }else{
+        await rest.put(Discord.Routes.applicationCommands(bot.user.id), {body: commands});
+    }
 
     if (err === "") { return 1; }
     return err;

@@ -1,0 +1,6 @@
+This todo list has to be checked before merging the new version's branch to main, please do not remove any todos from this file, you can however add some if you recon we are missing things.
+
+- Change the tags from vX.X.X to the next version's ones
+- Build the js scripts
+- Add security handling state in the SECURITY.md's table
+- The src (and by extension the dist) codes must be as stable as possible

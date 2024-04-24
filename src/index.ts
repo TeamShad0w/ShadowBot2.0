@@ -3,15 +3,11 @@ import Discord from 'discord.js';
 import Config from './config.json';
 import Default from './0.json';
 import loadCommands from './loaders/loadCommands';
-import loadDatabase from './loaders/loadDatabase';
 import loadEvents from './loaders/loadEvents';
-import loadSlashInteractions from './loaders/loadSlashInteractions';
 import ClientWithCommands from './utils/clientWithCommands';
 import print from './utils/consoleHandler';
 import { LogLevel } from './utils/consoleHandler';
-import { ITryFunctionCallback, tryFunction } from './utils/tryFunction';
-import { IGlobalGuildContainer } from './utils/guildHandler';
-import ConfigHandler from './utils/configHandler';
+import { tryFunction } from './utils/tryFunction';
 
 /**
  * Tries to connect the bot Client to Discord servers
@@ -28,7 +24,10 @@ async function login(bot:ClientWithCommands):Promise<number|string> {
     return 1;
 }
 
-//TODO : jsDoc
+/**
+ * The main programs that runs the bot
+ * @returns {Promise<void>}
+ */
 async function main():Promise<void> {
 
     /**
@@ -41,12 +40,6 @@ async function main():Promise<void> {
     await tryFunction(bot, login);
 
     print("bot logged in.", LogLevel.Info, bot, null, true);
-
-    print("connecting to database...", LogLevel.Log, bot, null, true);
-
-    await tryFunction(bot, loadDatabase);
-
-    print("bot connected to database.", LogLevel.Info, bot, null, true);
 
     print("loading events...", LogLevel.Log, bot, null, true);
 
@@ -63,4 +56,6 @@ async function main():Promise<void> {
     print("commands loaded.", LogLevel.Info, bot, null, true);
 }
 
-main();
+if (typeof require !== 'undefined' && require.main === module) {
+    main();
+}

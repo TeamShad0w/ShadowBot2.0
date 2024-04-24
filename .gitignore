@@ -1,0 +1,5 @@
+node_modules
+.git
+.vscode
+config.json
+oldData.json

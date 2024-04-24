@@ -1,14 +1,20 @@
-import loadSlashInteractions from '../loaders/loadSlashInteractions';
 import print from '../utils/consoleHandler';
 import { LogLevel } from '../utils/consoleHandler';
 import ICommand from '../utils/command';
 import ClientWithCommands from '../utils/clientWithCommands';
-import Discord, { messageLink } from 'discord.js';
+import Discord from 'discord.js';
 import subcomandRunner from '../utils/subcommandRunner';
 
-// TODO : jsDoc
-
+/**
+ * Contains the function executed when an interaction is created.
+ */
 export default {
+    /**
+     * 
+     * @param {ClientWithCommands} bot The bot's client
+     * @param {Discord.Interaction} interaction The created interaction that the bot will process
+     * @returns {Promise<void>}
+     */
     listener : async (bot:ClientWithCommands, interaction:Discord.Interaction) : Promise<void> => {
         if(interaction instanceof Discord.ChatInputCommandInteraction){
             let command:ICommand = await require(`../commands/${interaction.commandName}`).default;
@@ -19,7 +25,12 @@ export default {
                 await command.run(bot, interaction);
             }catch(err){
                 print(err, LogLevel.Error, bot, interaction.guild);
-                interaction.reply("Sorry, an error has occurred. Please try again. If this persists, contact and administrator.");
+                if(interaction.replied || interaction.deferred){
+                    interaction.deleteReply()
+                    interaction.followUp({content:"Sorry, an error has occurred. Please try again. If this persists, contact and administrator.", ephemeral:true});
+                    return;
+                }
+                interaction.reply({content:"Sorry, an error has occurred. Please try again. If this persists, contact and administrator.", ephemeral:true});
             }
         }
     }
