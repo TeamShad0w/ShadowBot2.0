@@ -77,14 +77,27 @@ export async function logOnGuild(bot:ClientWithCommands, guild:Discord.Guild | n
     }));
 }
 
-// TODO : jsDoc
+/**
+ * Free the logs waiting in the logPipe
+ * @param {ClientWithCommands} bot The bot's client
+ * @returns {Promise<void>}
+ */
 export async function releaseLogsFromPipe(bot:ClientWithCommands) : Promise<void> {
     bot.logPipe.forEach(async log => {
         await logOnGuild(bot, log[3], log[1], log[2], log[0]);
     });
 }
 
-// TODO : jsDoc
+/**
+ * Prints a line in the console and the log system in the differents guilds
+ * @param msg The message to display
+ * @param logLevel The type of message
+ * @param bot The bot's client
+ * @param guild The guild to display the log into, if null then the message will be sent to all of them
+ * @param hold Wether to hold the log in the logPipe for later or to display it now
+ * @param _dateTime The date and time of the log, by default : Now
+ * @returns {Promise<void>}
+ */
 export default async function print(msg:any, logLevel:LogLevel=LogLevel.Debug, bot:ClientWithCommands, guild:Discord.Guild | null, hold=false, _dateTime:boolean=true) : Promise<void> {
     let dateTime = new Date();
     let dateTimeIndicator = _dateTime ? "[" + dateTime.toLocaleString().replace(", ", " at ") + "]" : "";
